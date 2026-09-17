@@ -129,6 +129,17 @@ function renderMode(s) {
     ? ` Unavailable request features were dropped automatically: ${s.degraded.join(", ")}.`
     : "";
 
+  // A price table nobody has checked makes every number downstream fiction.
+  // Say so louder than the mode itself.
+  if (s.rates_verified === false) {
+    $("mode-banner").innerHTML =
+      `<strong>Rate card not verified.</strong> The ${esc(s.ladder_name)} ladder is using
+       placeholder prices, so every cost figure on this page is a placeholder too.
+       Set <code>FEATHERLESS_RATES</code> to the rates from the model pages before
+       quoting any of these numbers.`;
+    return;
+  }
+
   $("mode-banner").innerHTML = live
     ? `<strong>Live mode.</strong> Every number below comes from real API calls and measured token counts.${esc(degraded)}`
     : `<strong>Mock provider &mdash; these numbers exercise the machinery, not the model.</strong>

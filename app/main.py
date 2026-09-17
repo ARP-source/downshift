@@ -45,6 +45,8 @@ def _state() -> dict:
     return {
         "mode": "mock" if SETTINGS.mock else "live",
         "provider": _provider.name,
+        "ladder_name": pricing.LADDER_NAME,
+        "rates_verified": pricing.RATES_VERIFIED,
         "degraded": list(getattr(_provider, "degraded", [])),
         "settings": SETTINGS.public(),
         "ladder": pricing.ladder_table(),

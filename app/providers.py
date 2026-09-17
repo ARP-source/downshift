@@ -456,7 +456,7 @@ def build_provider(settings: Settings) -> Provider:
     try:
         # The ladder decides the wire protocol: Claude tiers speak the Anthropic
         # API, the W&B tiers speak an OpenAI-compatible one.
-        if pricing.LADDER_NAME == "wandb":
+        if pricing.LADDER_NAME in ("wandb", "featherless"):
             return OpenAICompatibleProvider(settings)
         return AnthropicProvider(settings)
     except Exception as exc:
