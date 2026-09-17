@@ -87,13 +87,20 @@ WANDB_MODELS: dict[str, ModelSpec] = {
         supports_effort=False,
         supports_server_fallback=False,
     ),
-    "Qwen/Qwen3.6-35B-A3B": ModelSpec(
-        model_id="Qwen/Qwen3.6-35B-A3B",
-        label="Qwen3.6 35B",
+    # Mid tier is a dense instruction model on purpose. Qwen3.6-35B-A3B sat
+    # here first and is 3.5x cheaper per token than the flagship, but it is a
+    # reasoning model: it emitted ~170 output tokens to answer "Tokyo" against
+    # the flagship's 19, which made its real cost per answer ($0.00022) almost
+    # identical to the flagship's ($0.00027). List price per token is a poor
+    # proxy for cost per answered request when models differ in how much they
+    # think before speaking.
+    "meta-llama/Llama-3.3-70B-Instruct": ModelSpec(
+        model_id="meta-llama/Llama-3.3-70B-Instruct",
+        label="Llama 3.3 70B",
         tier=1,
-        input_per_mtok=0.25,
-        output_per_mtok=1.25,
-        context=262_000,
+        input_per_mtok=0.71,
+        output_per_mtok=0.71,
+        context=128_000,
         supports_effort=False,
         supports_server_fallback=False,
     ),
@@ -174,7 +181,7 @@ _LADDERS = {
     ),
     "wandb": (
         WANDB_MODELS,
-        ["openai/gpt-oss-20b", "Qwen/Qwen3.6-35B-A3B", "deepseek-ai/DeepSeek-V4-Pro-0813"],
+        ["openai/gpt-oss-20b", "meta-llama/Llama-3.3-70B-Instruct", "deepseek-ai/DeepSeek-V4-Pro-0813"],
         "deepseek-ai/DeepSeek-V4-Pro-0813",
         "openai/gpt-oss-20b",
     ),

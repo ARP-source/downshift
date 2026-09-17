@@ -32,6 +32,7 @@ _cascade = Cascade(_provider, _router, SETTINGS)
 _live = Metrics(slo_latency_ms=SETTINGS.slo_latency_ms)
 _feed: list[dict] = []
 _last_report: dict | None = None
+_last_brownout: dict | None = None
 
 
 class Ask(BaseModel):
@@ -48,6 +49,10 @@ class Compare(BaseModel):
 
 class Chaos(BaseModel):
     mode: str
+
+
+class BrownoutRequest(BaseModel):
+    limit: int | None = 30
 
 
 def _state() -> dict:
@@ -73,6 +78,7 @@ def _state() -> dict:
         "live": _live.snapshot(),
         "feed": _feed[-40:][::-1],
         "report": _last_report,
+        "brownout": _last_brownout,
     }
 
 
@@ -172,6 +178,13 @@ def run_bench(body: BenchRequest) -> JSONResponse:
     bench.save(report)
     _last_report = report
     return JSONResponse(report)
+
+
+@app.post("/api/brownout")
+def brownout(body: BrownoutRequest) -> JSONResponse:
+    global _last_brownout
+    _last_brownout = bench.run_brownout(limit=body.limit or 30, settings=SETTINGS)
+    return JSONResponse(_last_brownout)
 
 
 @app.get("/api/report")

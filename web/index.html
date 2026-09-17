@@ -216,6 +216,23 @@
   </section>
 
   <section class="panel">
+    <div class="row" style="justify-content: space-between; align-items: flex-start;">
+      <div>
+        <h2>Survival under a provider outage</h2>
+        <p class="note" id="brownout-note">The failure is injected at the provider boundary;
+          everything after it is the real system reacting. An always-flagship deployment has
+          nowhere to go when its one model stops answering.</p>
+      </div>
+      <button class="primary" id="run-brownout">Run outage test</button>
+    </div>
+    <figure>
+      <figcaption>Requests answered &mdash; higher is better</figcaption>
+      <div id="chart-brownout"></div>
+    </figure>
+    <div class="scroller"><table id="brownout-table"></table></div>
+  </section>
+
+  <section class="panel">
     <h2>Break the provider</h2>
     <p class="note">Injects a real failure at the provider boundary. An always-flagship
       deployment stops answering entirely; this one sheds down the ladder and keeps serving.

@@ -21,7 +21,7 @@ from . import datasets, pricing
 from .cascade import Cascade
 from .config import SETTINGS, Settings
 from .metrics import Metrics
-from .providers import build_provider
+from .providers import ChaosProvider, build_provider
 from .router import Router
 
 ARMS = ("flagship", "cheapest", "router")
@@ -158,3 +158,63 @@ def save(report: dict, name: str = "latest") -> Path:
     path = OUT_DIR / f"bench_{name}.json"
     path.write_text(json.dumps(report, indent=2))
     return path
+
+
+def run_brownout(limit: int = 30, settings: Settings = SETTINGS) -> dict:
+    """Availability under a provider outage: router against always-flagship.
+
+    The failure is injected at the provider boundary; everything downstream is
+    the real system reacting to it. That distinction matters -- injecting a
+    fault to observe recovery is standard practice, and the recovery here is
+    genuine, including the model calls that serve the rerouted requests.
+    """
+    items = datasets.load(limit)
+    scenarios = []
+
+    for mode in ("off", "flagship_down", "top_two_down"):
+        for arm in ("router", "flagship"):
+            if mode == "top_two_down" and arm == "flagship":
+                continue  # already zero in the milder case; no need to pay for it
+            provider = ChaosProvider(build_provider(settings))
+            provider.set_mode(mode)
+            router = Router(
+                quality_floor=settings.quality_floor,
+                tolerance=settings.quality_tolerance,
+                learn=(arm == "router"),
+            )
+            cascade = Cascade(provider, router, settings)
+            meter = Metrics(slo_latency_ms=settings.slo_latency_ms)
+            forced = None if arm == "router" else pricing.FLAGSHIP
+            for item in items:
+                meter.record(
+                    cascade.run(
+                        item.prompt,
+                        expected=item.answer,
+                        kind=item.kind,
+                        key=item.id,
+                        force_model=forced,
+                    )
+                )
+            snap = meter.snapshot()
+            answered = snap["requests"] - snap["unresolved"]
+            scenarios.append(
+                {
+                    "mode": mode,
+                    "arm": arm,
+                    "requests": snap["requests"],
+                    "answered": answered,
+                    "answered_pct": round(100.0 * answered / snap["requests"], 1)
+                    if snap["requests"]
+                    else 0.0,
+                    "quality": snap["quality"],
+                    "cost_usd": snap["total_cost_usd"],
+                    "failovers": snap["failovers"],
+                    "simulated": snap["simulated"],
+                }
+            )
+
+    return {
+        "items": len(items),
+        "provider": "mock" if settings.mock else "live",
+        "scenarios": scenarios,
+    }

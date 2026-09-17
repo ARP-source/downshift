@@ -329,6 +329,44 @@ function renderBench(s) {
     : '<p class="empty">The policy did not need to move: its starting prior already matched the evidence.</p>';
 }
 
+const SCENARIO_LABEL = {
+  off: "Healthy",
+  flagship_down: "Flagship down",
+  top_two_down: "Top two down",
+};
+
+function renderBrownout(s) {
+  const b = s.brownout;
+  if (!b) {
+    $("chart-brownout").innerHTML = '<p class="empty">Not run yet.</p>';
+    $("brownout-table").innerHTML = "";
+    return;
+  }
+  const rows = b.scenarios.map((x) => ({
+    name: `${SCENARIO_LABEL[x.mode] || x.mode} · ${x.arm === "router" ? "Router" : "All flagship"}`,
+    color: x.arm === "router" ? ARM_COLOR.router : ARM_COLOR.flagship,
+    value: x.answered_pct,
+  }));
+  barChart($("chart-brownout"), rows, (v) => v.toFixed(1) + "%");
+
+  $("brownout-table").innerHTML = `
+    <thead><tr><th>Scenario</th><th>Arm</th><th>Answered</th><th>Quality</th>
+      <th>Cost</th><th>Failovers</th></tr></thead>
+    <tbody>${b.scenarios
+      .map(
+        (x) => `<tr>
+        <td>${esc(SCENARIO_LABEL[x.mode] || x.mode)}</td>
+        <td><span class="swatch" style="background:${
+          x.arm === "router" ? ARM_COLOR.router : ARM_COLOR.flagship
+        }"></span>${x.arm === "router" ? "Router" : "All flagship"}</td>
+        <td>${x.answered}/${x.requests} (${x.answered_pct}%)</td>
+        <td>${pct(x.quality)}</td>
+        <td>${usd(x.cost_usd)}</td>
+        <td>${x.failovers}</td></tr>`
+      )
+      .join("")}</tbody>`;
+}
+
 function renderPolicy(s) {
   // Prefer the policy the benchmark actually trained. The dashboard keeps its
   // own long-lived router for the ask box, and showing that one after a
@@ -398,6 +436,7 @@ function render(s) {
   renderLadder(s);
   renderKPIs(s);
   renderBench(s);
+  renderBrownout(s);
   renderPolicy(s);
   renderFeed(s);
 }
@@ -497,6 +536,23 @@ $("compare-btn").addEventListener("click", async () => {
   } finally {
     btn.disabled = false;
     btn.textContent = "Compare all tiers";
+  }
+});
+
+$("run-brownout").addEventListener("click", async (e) => {
+  const btn = e.currentTarget;
+  btn.disabled = true;
+  btn.textContent = "Breaking things…";
+  try {
+    await fetch("/api/brownout", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ limit: 30 }),
+    });
+    await refresh();
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "Run outage test";
   }
 });
 
