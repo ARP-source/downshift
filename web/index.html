@@ -215,6 +215,32 @@
     <div class="scroller"><table id="policy-table"></table></div>
   </section>
 
+  <section class="panel">
+    <div class="row" style="justify-content: space-between; align-items: flex-start;">
+      <div>
+        <h2>Real work: writing code that has to run</h2>
+        <p class="note" id="code-note">Each arm writes a Python function for the same
+          programming tasks. Nothing is string-matched: the generated code is executed
+          against test cases and either passes every one or fails. The tasks carry an
+          easy/medium/hard label assigned independently of our difficulty scorer.</p>
+      </div>
+      <button class="primary" id="run-code">Run code benchmark</button>
+    </div>
+    <div class="charts">
+      <figure>
+        <figcaption>Tasks solved &mdash; all assertions passing</figcaption>
+        <div id="chart-solve"></div>
+      </figure>
+      <figure>
+        <figcaption>Cost to solve them, USD &mdash; lower is better</figcaption>
+        <div id="chart-codecost"></div>
+      </figure>
+    </div>
+    <div id="code-align"></div>
+    <div class="scroller"><table id="code-table"></table></div>
+  </section>
+
+
   <section class="panel">
     <div class="row" style="justify-content: space-between; align-items: flex-start;">
       <div>
