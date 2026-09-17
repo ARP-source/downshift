@@ -44,11 +44,13 @@ let STATE = null;
 
 /* ---------- charts ---------------------------------------------------- */
 
-function barChart(host, rows, format) {
+function barChart(host, rows, format, padLeft) {
   if (!host) return;
   const width = Math.max(280, host.clientWidth || 420);
   const rowH = 40;
-  const padL = 104;
+  // Callers with long category names pass a wider gutter; the default suits
+  // short arm names and clips anything longer.
+  const padL = padLeft || 104;
   const padR = 72;
   const height = rows.length * rowH + 8;
   const max = Math.max(...rows.map((r) => r.value)) || 1;
@@ -339,8 +341,8 @@ function renderBench(s) {
 
 const SCENARIO_LABEL = {
   off: "Healthy",
-  flagship_down: "Flagship down",
-  top_two_down: "Top two down",
+  flagship_down: "Top tier 503",
+  top_two_down: "Top 2 down",
 };
 
 function renderCodeBench(s) {
@@ -429,7 +431,7 @@ function renderBrownout(s) {
     color: x.arm === "router" ? ARM_COLOR.router : ARM_COLOR.flagship,
     value: x.answered_pct,
   }));
-  barChart($("chart-brownout"), rows, (v) => v.toFixed(1) + "%");
+  barChart($("chart-brownout"), rows, (v) => v.toFixed(1) + "%", 168);
 
   $("brownout-table").innerHTML = `
     <thead><tr><th>Scenario</th><th>Arm</th><th>Answered</th><th>Quality</th>
@@ -576,6 +578,19 @@ function renderCompare(data) {
 }
 
 /* ---------- wiring ----------------------------------------------------- */
+// Registering a listener on a missing element throws, and everything wired
+// after it silently never runs -- which is exactly how the code benchmark
+// panel stayed dead while the page looked fine. Warn and carry on instead.
+function on(id, event, handler) {
+  const el = $(id);
+  if (!el) {
+    console.warn(`[dashboard] no element #${id}; "${event}" handler not attached`);
+    return false;
+  }
+  el.addEventListener(event, handler);
+  return true;
+}
+
 
 async function refresh() {
   const res = await fetch("/api/state");
@@ -603,7 +618,7 @@ async function loadSamples() {
     });
 }
 
-$("compare-btn").addEventListener("click", async () => {
+on("compare-btn", "click", async () => {
   const prompt = $("ask-input").value.trim();
   if (!prompt) return;
   const btn = $("compare-btn");
@@ -622,7 +637,7 @@ $("compare-btn").addEventListener("click", async () => {
   }
 });
 
-$("run-code").addEventListener("click", async (e) => {
+on("run-code", "click", async (e) => {
   const btn = e.currentTarget;
   btn.disabled = true;
   btn.textContent = "Writing and running code…";
@@ -639,7 +654,7 @@ $("run-code").addEventListener("click", async (e) => {
   }
 });
 
-$("run-brownout").addEventListener("click", async (e) => {
+on("run-brownout", "click", async (e) => {
   const btn = e.currentTarget;
   btn.disabled = true;
   btn.textContent = "Breaking things…";
@@ -656,7 +671,7 @@ $("run-brownout").addEventListener("click", async (e) => {
   }
 });
 
-$("run-bench").addEventListener("click", async (e) => {
+on("run-bench", "click", async (e) => {
   const btn = e.currentTarget;
   btn.disabled = true;
   btn.textContent = "Running…";
@@ -673,7 +688,7 @@ $("run-bench").addEventListener("click", async (e) => {
   }
 });
 
-$("ask-form").addEventListener("submit", async (e) => {
+on("ask-form", "submit", async (e) => {
   e.preventDefault();
   const input = $("ask-input");
   const prompt = input.value.trim();
