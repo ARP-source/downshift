@@ -83,7 +83,7 @@ def run_tests(code: str, func: str, tests: list[tuple]) -> dict:
     if not code.strip():
         return {"passed": 0, "total": len(tests), "errors": ["no code produced"]}
 
-    workdir = Path(tempfile.mkdtemp(prefix="cascade_code_"))
+    workdir = Path(tempfile.mkdtemp(prefix="downshift_code_"))
     try:
         script = workdir / "candidate.py"
         script.write_text(HARNESS.format(code=code, tests=tests, func=func), encoding="utf-8")

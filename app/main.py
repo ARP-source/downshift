@@ -17,7 +17,7 @@ from .router import Router
 
 WEB = Path(__file__).resolve().parent.parent / "web"
 
-app = FastAPI(title="Cascade Router")
+app = FastAPI(title="Downshift")
 
 # Long-lived objects so the live feed accumulates across requests and the
 # policy keeps learning while somebody clicks around the dashboard.

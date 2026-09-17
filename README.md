@@ -1,4 +1,4 @@
-# Cascade Router
+# Downshift
 
 **Route each request to the cheapest model that can actually answer it, and prove
 what that costs you in quality.**
@@ -20,7 +20,7 @@ matching, no marking scheme to argue about.
 |---|---|---|---|---|---|---|
 | All flagship (DeepSeek V4-Pro) | 12/14 | $0.019988 | 2463 ms | 5/5 | 5/5 | **2/4** |
 | All cheapest (GPT-OSS 20B) | 12/14 | $0.000676 | 3357 ms | 5/5 | 5/5 | **2/4** |
-| **Cascade Router** | **13/14** | **$0.001370** | **1921 ms** | 5/5 | 4/5 | **4/4** |
+| **Downshift** | **13/14** | **$0.001370** | **1921 ms** | 5/5 | 4/5 | **4/4** |
 
 **The router solved more problems than the flagship, at 93% less cost.**
 

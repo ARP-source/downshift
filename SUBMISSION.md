@@ -1,6 +1,6 @@
-# Submission: Cascade Router
+# Submission: Downshift
 
-Repo: https://github.com/ARP-source/cascade-router
+Repo: https://github.com/ARP-source/downshift
 
 **Every figure below was measured against live models on W&B Inference. Nothing
 is simulated.**
@@ -29,7 +29,7 @@ matching, no partial credit, no marking scheme to dispute.
 |---|---|---|---|---|---|---|
 | All flagship (DeepSeek V4-Pro) | 12/14 | $0.019988 | 2463 ms | 5/5 | 5/5 | **2/4** |
 | All cheapest (GPT-OSS 20B) | 12/14 | $0.000676 | 3357 ms | 5/5 | 5/5 | **2/4** |
-| **Cascade Router** | **13/14** | **$0.001370** | **1921 ms** | 5/5 | 4/5 | **4/4** |
+| **Downshift** | **13/14** | **$0.001370** | **1921 ms** | 5/5 | 4/5 | **4/4** |
 
 **93.1% cheaper than the flagship, and it solved more problems than the flagship.**
 
