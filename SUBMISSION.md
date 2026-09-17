@@ -9,9 +9,10 @@ is simulated.**
 
 ## One line
 
-Routing that pays for itself on the requests that matter: 93% cheaper than
-always using the flagship model, and it solves the hard problems the flagship
-misses.
+Start cheap, check the answer, escalate only on failure: 96% cheaper than
+always using the flagship model, and it solves more problems than the flagship
+does. We also ran the experiment that showed our own difficulty classifier was
+not what produced that result, and shipped the simpler thing instead.
 
 ## The problem
 
@@ -22,25 +23,47 @@ cheaper model is a silent quality risk they cannot measure on their own traffic.
 ## The headline
 
 Fourteen programming tasks. Each arm writes a Python function; the function is
-**executed against 53 test assertions** and either passes or fails. No string
-matching, no partial credit, no marking scheme to dispute.
+**executed against 53 test assertions** and either passes every one or fails.
+No string matching, no partial credit. Four independent runs on live models.
 
-| Arm | Solved | Cost | p50 | Easy | Medium | **Hard** |
-|---|---|---|---|---|---|---|
-| All flagship (DeepSeek V4-Pro) | 12/14 | $0.019988 | 2463 ms | 5/5 | 5/5 | **2/4** |
-| All cheapest (GPT-OSS 20B) | 12/14 | $0.000676 | 3357 ms | 5/5 | 5/5 | **2/4** |
-| **Downshift** | **13/14** | **$0.001370** | **1921 ms** | 5/5 | 4/5 | **4/4** |
+| Strategy | Solved | Cost | p50 |
+|---|---|---|---|
+| Always the flagship model | 10-12 / 14 | $0.0204 | 2405 ms |
+| Always the cheapest model | 11-13 / 14 | $0.0006 | 2622 ms |
+| Route by predicted difficulty | 12-13 / 14 | $0.0014 | **1377 ms** |
+| **Verify and escalate, no prediction** | **13-14 / 14** | **$0.0008** | 2824 ms |
 
-**93.1% cheaper than the flagship, and it solved more problems than the flagship.**
+**96% cheaper than always-flagship, and it solves more, not fewer.**
 
-The last column is the whole product. On hard tasks the cheap model gets 2 of 4.
-So does the flagship. The router gets 4 of 4, because a failed quality gate
-triggers escalation instead of shipping a wrong answer. Cheap-only looks fine in
-aggregate and loses half your hard work without telling you.
+The mechanism is one sentence: start on the cheapest tier, check the answer
+against a quality gate, escalate only when it fails.
 
-### It reproduces
+## We deleted our own classifier and the system got better
 
-The benchmark was run twice against live models. Exploration is randomised, so
+This project began as difficulty routing: score the prompt, pick the tier. That
+scorer then failed its own validation, coming out flat against independently
+assigned task levels (0.382 / 0.407 / 0.404 for easy / medium / hard). Which
+raised a question we could not answer by looking at the headline: was the
+classifier contributing anything, or was the verification loop doing all the
+work?
+
+So we added an arm with the classifier deleted. Same ladder, same quality gate,
+same escalation -- it just always starts at the cheapest tier.
+
+It won. Across two runs it solved **one task more** than the routed arm while
+costing **61-95% less**. Prediction did buy something real: roughly **2x lower
+latency**, because it skips the failed cheap attempt on hard work. That is a
+genuine trade for interactive traffic, and the classifier stays in the repo
+behind a flag. But it is not what we are selling, because the measurement says
+it should not be.
+
+The finding generalises past this project: **checking the answer beats
+predicting which model you need.** Verification is cheap, and it is correct by
+construction in a way a classifier never is.
+
+### The routed arm is stable, which is how we trusted the comparison
+
+The benchmark was run twice against live models before the ablation. Exploration is randomised, so
 the router does not take an identical path through the ladder each time.
 
 | Arm | Hard tasks, run 1 | Hard tasks, run 2 | Solved, run 1 | Solved, run 2 |
@@ -49,8 +72,10 @@ the router does not take an identical path through the ladder each time.
 | All cheapest | 2/4 | 2/4 | 12/14 | 12/14 |
 | **Router** | **4/4** | **4/4** | **13/14** | **13/14** |
 
-Cost saving against flagship: 93.1% then 93.3%. The hard-task column, which is
-the claim that carries the product, came out identical both times.
+Cost saving against flagship for the routed arm: 93.1% then 93.3%. Its hard-task
+column came out identical both times, which is why we trusted it enough to test
+it against the ablation -- where it then lost to having no classifier at all, at
+96% saving. The 93% figures describe the routed arm, not what we ship.
 
 ## The result we did not want, reported anyway
 
@@ -136,13 +161,15 @@ difference. Most production apps pay the top rate for everything."
 
 **0:20 - 1:10 | The proof.** Run code benchmark. "Fourteen programming tasks.
 The code gets executed against 53 assertions -- it passes or it does not."
-Land on the table: "flagship solved 12, cost two cents. We solved 13, cost a
-tenth of a cent. We beat the flagship for 7% of the price."
+Land on the table: "the flagship solves 10 to 12 of 14 and costs two cents. We
+solve 13 to 14 and cost eight hundredths of a cent. Cheaper and better, not
+cheaper or better."
 
-**1:10 - 1:50 | Where the value actually is.** Point at the hard column. "Easy
-and medium, everything ties. Hard: the cheap model gets 2 of 4, the flagship
-gets 2 of 4, we get 4 of 4. That is the product. Cheap-only looks fine on
-average and loses half your hard work silently."
+**1:10 - 1:50 | The experiment we ran on ourselves.** "We built difficulty
+routing. Then we deleted the classifier and ran it again. It got better --
+one more task solved, 61 to 95 percent cheaper, twice. Prediction bought us
+2x latency and nothing else. So we shipped verification and kept the classifier
+behind a flag. Checking the answer beats guessing which model you need."
 
 **1:50 - 2:20 | The result we did not want.** "On 74 trivia questions all three
 arms scored identically, and cheap-only was 96% cheaper. On that workload our

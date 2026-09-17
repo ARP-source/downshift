@@ -1,0 +1,1176 @@
+{
+  "tasks": 14,
+  "provider": "live",
+  "elapsed_s": 151.7,
+  "dataset": {
+    "total": 14,
+    "by_level": {
+      "easy": 5,
+      "medium": 5,
+      "hard": 4
+    },
+    "total_assertions": 53
+  },
+  "arms": {
+    "flagship": {
+      "arm": "flagship",
+      "solved": 10,
+      "tasks": 14,
+      "solve_rate": 0.7143,
+      "cost_usd": 0.019715,
+      "p50_latency_ms": 1509.5,
+      "calls": 14,
+      "by_level": {
+        "easy": {
+          "solved": 5,
+          "total": 5,
+          "cost_usd": 0.00409695
+        },
+        "medium": {
+          "solved": 5,
+          "total": 5,
+          "cost_usd": 0.00650183
+        },
+        "hard": {
+          "solved": 0,
+          "total": 4,
+          "cost_usd": 0.00911616
+        }
+      },
+      "rows": [
+        {
+          "id": "e1",
+          "title": "Sum of even numbers",
+          "level": "easy",
+          "difficulty": 0.458,
+          "model": "deepseek-ai/DeepSeek-V4-Pro-0813",
+          "label": "DeepSeek V4-Pro",
+          "solved": true,
+          "passed": 4,
+          "total": 4,
+          "errors": [],
+          "cost_usd": 0.00059607,
+          "baseline_cost_usd": 0.00059607,
+          "latency_ms": 1311.8,
+          "escalations": 0
+        },
+        {
+          "id": "e2",
+          "title": "Reverse word order",
+          "level": "easy",
+          "difficulty": 0.341,
+          "model": "deepseek-ai/DeepSeek-V4-Pro-0813",
+          "label": "DeepSeek V4-Pro",
+          "solved": true,
+          "passed": 3,
+          "total": 3,
+          "errors": [],
+          "cost_usd": 0.00084823,
+          "baseline_cost_usd": 0.00084823,
+          "latency_ms": 7308.1,
+          "escalations": 0
+        },
+        {
+          "id": "e3",
+          "title": "Count vowels",
+          "level": "easy",
+          "difficulty": 0.343,
+          "model": "deepseek-ai/DeepSeek-V4-Pro-0813",
+          "label": "DeepSeek V4-Pro",
+          "solved": true,
+          "passed": 4,
+          "total": 4,
+          "errors": [],
+          "cost_usd": 0.00091284,
+          "baseline_cost_usd": 0.00091284,
+          "latency_ms": 1622.9,
+          "escalations": 0
+        },
+        {
+          "id": "e4",
+          "title": "Largest gap",
+          "level": "easy",
+          "difficulty": 0.408,
+          "model": "deepseek-ai/DeepSeek-V4-Pro-0813",
+          "label": "DeepSeek V4-Pro",
+          "solved": true,
+          "passed": 4,
+          "total": 4,
+          "errors": [],
+          "cost_usd": 0.00079401,
+          "baseline_cost_usd": 0.00079401,
+          "latency_ms": 949.4,
+          "escalations": 0
+        },
+        {
+          "id": "e5",
+          "title": "Palindrome check",
+          "level": "easy",
+          "difficulty": 0.361,
+          "model": "deepseek-ai/DeepSeek-V4-Pro-0813",
+          "label": "DeepSeek V4-Pro",
+          "solved": true,
+          "passed": 4,
+          "total": 4,
+          "errors": [],
+          "cost_usd": 0.0009458,
+          "baseline_cost_usd": 0.0009458,
+          "latency_ms": 1068.9,
+          "escalations": 0
+        },
+        {
+          "id": "m1",
+          "title": "Pair summing to target",
+          "level": "medium",
+          "difficulty": 0.483,
+          "model": "deepseek-ai/DeepSeek-V4-Pro-0813",
+          "label": "DeepSeek V4-Pro",
+          "solved": true,
+          "passed": 3,
+          "total": 3,
+          "errors": [],
+          "cost_usd": 0.00122163,
+          "baseline_cost_usd": 0.00122163,
+          "latency_ms": 1260.8,
+          "escalations": 0
+        },
+        {
+          "id": "m2",
+          "title": "Merge overlapping ranges",
+          "level": "medium",
+          "difficulty": 0.353,
+          "model": "deepseek-ai/DeepSeek-V4-Pro-0813",
+          "label": "DeepSeek V4-Pro",
+          "solved": true,
+          "passed": 3,
+          "total": 3,
+          "errors": [],
+          "cost_usd": 0.00166521,
+          "baseline_cost_usd": 0.00166521,
+          "latency_ms": 1509.5,
+          "escalations": 0
+        },
+        {
+          "id": "m3",
+          "title": "Longest run of distinct characters",
+          "level": "medium",
+          "difficulty": 0.339,
+          "model": "deepseek-ai/DeepSeek-V4-Pro-0813",
+          "label": "DeepSeek V4-Pro",
+          "solved": true,
+          "passed": 4,
+          "total": 4,
+          "errors": [],
+          "cost_usd": 0.00093404,
+          "baseline_cost_usd": 0.00093404,
+          "latency_ms": 1261.1,
+          "escalations": 0
+        },
+        {
+          "id": "m4",
+          "title": "Balanced brackets",
+          "level": "medium",
+          "difficulty": 0.351,
+          "model": "deepseek-ai/DeepSeek-V4-Pro-0813",
+          "label": "DeepSeek V4-Pro",
+          "solved": true,
+          "passed": 5,
+          "total": 5,
+          "errors": [],
+          "cost_usd": 0.0010409,
+          "baseline_cost_usd": 0.0010409,
+          "latency_ms": 1120.5,
+          "escalations": 0
+        },
+        {
+          "id": "m5",
+          "title": "Group anagrams",
+          "level": "medium",
+          "difficulty": 0.511,
+          "model": "deepseek-ai/DeepSeek-V4-Pro-0813",
+          "label": "DeepSeek V4-Pro",
+          "solved": true,
+          "passed": 3,
+          "total": 3,
+          "errors": [],
+          "cost_usd": 0.00164005,
+          "baseline_cost_usd": 0.00164005,
+          "latency_ms": 1761.2,
+          "escalations": 0
+        },
+        {
+          "id": "h1",
+          "title": "Median of two sorted lists",
+          "level": "hard",
+          "difficulty": 0.401,
+          "model": null,
+          "label": null,
+          "solved": false,
+          "passed": 0,
+          "total": 4,
+          "errors": [
+            "no code produced"
+          ],
+          "cost_usd": 0.00227118,
+          "baseline_cost_usd": 0.00227118,
+          "latency_ms": 5846.0,
+          "escalations": 0
+        },
+        {
+          "id": "h2",
+          "title": "Longest increasing subsequence",
+          "level": "hard",
+          "difficulty": 0.393,
+          "model": "deepseek-ai/DeepSeek-V4-Pro-0813",
+          "label": "DeepSeek V4-Pro",
+          "solved": false,
+          "passed": 0,
+          "total": 4,
+          "errors": [
+            "got None want 4",
+            "got None want 4",
+            "got None want 1"
+          ],
+          "cost_usd": 0.0022738,
+          "baseline_cost_usd": 0.0022738,
+          "latency_ms": 3300.3,
+          "escalations": 0
+        },
+        {
+          "id": "h3",
+          "title": "Word segmentation",
+          "level": "hard",
+          "difficulty": 0.413,
+          "model": null,
+          "label": null,
+          "solved": false,
+          "passed": 0,
+          "total": 4,
+          "errors": [
+            "no code produced"
+          ],
+          "cost_usd": 0.0022869,
+          "baseline_cost_usd": 0.0022869,
+          "latency_ms": 4888.4,
+          "escalations": 0
+        },
+        {
+          "id": "h4",
+          "title": "Smallest covering window",
+          "level": "hard",
+          "difficulty": 0.409,
+          "model": null,
+          "label": null,
+          "solved": false,
+          "passed": 0,
+          "total": 4,
+          "errors": [
+            "no code produced"
+          ],
+          "cost_usd": 0.00228428,
+          "baseline_cost_usd": 0.00228428,
+          "latency_ms": 5011.5,
+          "escalations": 0
+        }
+      ],
+      "policy": null
+    },
+    "cheapest": {
+      "arm": "cheapest",
+      "solved": 13,
+      "tasks": 14,
+      "solve_rate": 0.9286,
+      "cost_usd": 0.000533,
+      "p50_latency_ms": 2395.0,
+      "calls": 14,
+      "by_level": {
+        "easy": {
+          "solved": 5,
+          "total": 5,
+          "cost_usd": 0.0001146
+        },
+        "medium": {
+          "solved": 5,
+          "total": 5,
+          "cost_usd": 0.00022593
+        },
+        "hard": {
+          "solved": 3,
+          "total": 4,
+          "cost_usd": 0.00019251
+        }
+      },
+      "rows": [
+        {
+          "id": "e1",
+          "title": "Sum of even numbers",
+          "level": "easy",
+          "difficulty": 0.458,
+          "model": "openai/gpt-oss-20b",
+          "label": "GPT-OSS 20B",
+          "solved": true,
+          "passed": 4,
+          "total": 4,
+          "errors": [],
+          "cost_usd": 1.796e-05,
+          "baseline_cost_usd": 0.00061602,
+          "latency_ms": 1237.5,
+          "escalations": 0
+        },
+        {
+          "id": "e2",
+          "title": "Reverse word order",
+          "level": "easy",
+          "difficulty": 0.341,
+          "model": "openai/gpt-oss-20b",
+          "label": "GPT-OSS 20B",
+          "solved": true,
+          "passed": 3,
+          "total": 3,
+          "errors": [],
+          "cost_usd": 1.329e-05,
+          "baseline_cost_usd": 0.00047218,
+          "latency_ms": 738.4,
+          "escalations": 0
+        },
+        {
+          "id": "e3",
+          "title": "Count vowels",
+          "level": "easy",
+          "difficulty": 0.343,
+          "model": "openai/gpt-oss-20b",
+          "label": "GPT-OSS 20B",
+          "solved": true,
+          "passed": 4,
+          "total": 4,
+          "errors": [],
+          "cost_usd": 1.951e-05,
+          "baseline_cost_usd": 0.00066482,
+          "latency_ms": 1847.5,
+          "escalations": 0
+        },
+        {
+          "id": "e4",
+          "title": "Largest gap",
+          "level": "easy",
+          "difficulty": 0.408,
+          "model": "openai/gpt-oss-20b",
+          "label": "GPT-OSS 20B",
+          "solved": true,
+          "passed": 4,
+          "total": 4,
+          "errors": [],
+          "cost_usd": 2.942e-05,
+          "baseline_cost_usd": 0.00096709,
+          "latency_ms": 1877.7,
+          "escalations": 0
+        },
+        {
+          "id": "e5",
+          "title": "Palindrome check",
+          "level": "easy",
+          "difficulty": 0.361,
+          "model": "openai/gpt-oss-20b",
+          "label": "GPT-OSS 20B",
+          "solved": true,
+          "passed": 4,
+          "total": 4,
+          "errors": [],
+          "cost_usd": 3.442e-05,
+          "baseline_cost_usd": 0.00112019,
+          "latency_ms": 2119.3,
+          "escalations": 0
+        },
+        {
+          "id": "m1",
+          "title": "Pair summing to target",
+          "level": "medium",
+          "difficulty": 0.483,
+          "model": "openai/gpt-oss-20b",
+          "label": "GPT-OSS 20B",
+          "solved": true,
+          "passed": 3,
+          "total": 3,
+          "errors": [],
+          "cost_usd": 3.876e-05,
+          "baseline_cost_usd": 0.00125477,
+          "latency_ms": 3033.5,
+          "escalations": 0
+        },
+        {
+          "id": "m2",
+          "title": "Merge overlapping ranges",
+          "level": "medium",
+          "difficulty": 0.353,
+          "model": "openai/gpt-oss-20b",
+          "label": "GPT-OSS 20B",
+          "solved": true,
+          "passed": 3,
+          "total": 3,
+          "errors": [],
+          "cost_usd": 6.936e-05,
+          "baseline_cost_usd": 0.00218412,
+          "latency_ms": 4926.5,
+          "escalations": 0
+        },
+        {
+          "id": "m3",
+          "title": "Longest run of distinct characters",
+          "level": "medium",
+          "difficulty": 0.339,
+          "model": "openai/gpt-oss-20b",
+          "label": "GPT-OSS 20B",
+          "solved": true,
+          "passed": 4,
+          "total": 4,
+          "errors": [],
+          "cost_usd": 4.033e-05,
+          "baseline_cost_usd": 0.00129586,
+          "latency_ms": 2788.1,
+          "escalations": 0
+        },
+        {
+          "id": "m4",
+          "title": "Balanced brackets",
+          "level": "medium",
+          "difficulty": 0.351,
+          "model": "openai/gpt-oss-20b",
+          "label": "GPT-OSS 20B",
+          "solved": true,
+          "passed": 5,
+          "total": 5,
+          "errors": [],
+          "cost_usd": 3.531e-05,
+          "baseline_cost_usd": 0.00114532,
+          "latency_ms": 2235.9,
+          "escalations": 0
+        },
+        {
+          "id": "m5",
+          "title": "Group anagrams",
+          "level": "medium",
+          "difficulty": 0.511,
+          "model": "openai/gpt-oss-20b",
+          "label": "GPT-OSS 20B",
+          "solved": true,
+          "passed": 3,
+          "total": 3,
+          "errors": [],
+          "cost_usd": 4.217e-05,
+          "baseline_cost_usd": 0.00135904,
+          "latency_ms": 2751.8,
+          "escalations": 0
+        },
+        {
+          "id": "h1",
+          "title": "Median of two sorted lists",
+          "level": "hard",
+          "difficulty": 0.401,
+          "model": "openai/gpt-oss-20b",
+          "label": "GPT-OSS 20B",
+          "solved": true,
+          "passed": 4,
+          "total": 4,
+          "errors": [],
+          "cost_usd": 4.244e-05,
+          "baseline_cost_usd": 0.00136053,
+          "latency_ms": 2716.2,
+          "escalations": 0
+        },
+        {
+          "id": "h2",
+          "title": "Longest increasing subsequence",
+          "level": "hard",
+          "difficulty": 0.393,
+          "model": "openai/gpt-oss-20b",
+          "label": "GPT-OSS 20B",
+          "solved": true,
+          "passed": 4,
+          "total": 4,
+          "errors": [],
+          "cost_usd": 3.707e-05,
+          "baseline_cost_usd": 0.00119814,
+          "latency_ms": 2395.0,
+          "escalations": 0
+        },
+        {
+          "id": "h3",
+          "title": "Word segmentation",
+          "level": "hard",
+          "difficulty": 0.413,
+          "model": "openai/gpt-oss-20b",
+          "label": "GPT-OSS 20B",
+          "solved": true,
+          "passed": 4,
+          "total": 4,
+          "errors": [],
+          "cost_usd": 4.098e-05,
+          "baseline_cost_usd": 0.00132081,
+          "latency_ms": 2773.0,
+          "escalations": 0
+        },
+        {
+          "id": "h4",
+          "title": "Smallest covering window",
+          "level": "hard",
+          "difficulty": 0.409,
+          "model": "openai/gpt-oss-20b",
+          "label": "GPT-OSS 20B",
+          "solved": false,
+          "passed": 0,
+          "total": 4,
+          "errors": [
+            "SyntaxError: invalid syntax"
+          ],
+          "cost_usd": 7.202e-05,
+          "baseline_cost_usd": 0.00226594,
+          "latency_ms": 4988.2,
+          "escalations": 0
+        }
+      ],
+      "policy": null
+    },
+    "router": {
+      "arm": "router",
+      "solved": 13,
+      "tasks": 14,
+      "solve_rate": 0.9286,
+      "cost_usd": 0.001377,
+      "p50_latency_ms": 1061.3,
+      "calls": 14,
+      "by_level": {
+        "easy": {
+          "solved": 5,
+          "total": 5,
+          "cost_usd": 0.00029798
+        },
+        "medium": {
+          "solved": 4,
+          "total": 5,
+          "cost_usd": 0.0004473
+        },
+        "hard": {
+          "solved": 4,
+          "total": 4,
+          "cost_usd": 0.00063172
+        }
+      },
+      "rows": [
+        {
+          "id": "e1",
+          "title": "Sum of even numbers",
+          "level": "easy",
+          "difficulty": 0.458,
+          "model": "meta-llama/Llama-3.3-70B-Instruct",
+          "label": "Llama 3.3 70B",
+          "solved": true,
+          "passed": 4,
+          "total": 4,
+          "errors": [],
+          "cost_usd": 0.00011502,
+          "baseline_cost_usd": 0.00027317,
+          "latency_ms": 586.5,
+          "escalations": 0
+        },
+        {
+          "id": "e2",
+          "title": "Reverse word order",
+          "level": "easy",
+          "difficulty": 0.341,
+          "model": "openai/gpt-oss-20b",
+          "label": "GPT-OSS 20B",
+          "solved": true,
+          "passed": 3,
+          "total": 3,
+          "errors": [],
+          "cost_usd": 1.849e-05,
+          "baseline_cost_usd": 0.00063058,
+          "latency_ms": 1023.9,
+          "escalations": 0
+        },
+        {
+          "id": "e3",
+          "title": "Count vowels",
+          "level": "easy",
+          "difficulty": 0.343,
+          "model": "openai/gpt-oss-20b",
+          "label": "GPT-OSS 20B",
+          "solved": true,
+          "passed": 4,
+          "total": 4,
+          "errors": [],
+          "cost_usd": 1.951e-05,
+          "baseline_cost_usd": 0.00066482,
+          "latency_ms": 1117.9,
+          "escalations": 0
+        },
+        {
+          "id": "e4",
+          "title": "Largest gap",
+          "level": "easy",
+          "difficulty": 0.408,
+          "model": "meta-llama/Llama-3.3-70B-Instruct",
+          "label": "Llama 3.3 70B",
+          "solved": true,
+          "passed": 4,
+          "total": 4,
+          "errors": [],
+          "cost_usd": 0.00012354,
+          "baseline_cost_usd": 0.00030479,
+          "latency_ms": 395.3,
+          "escalations": 0
+        },
+        {
+          "id": "e5",
+          "title": "Palindrome check",
+          "level": "easy",
+          "difficulty": 0.361,
+          "model": "openai/gpt-oss-20b",
+          "label": "GPT-OSS 20B",
+          "solved": true,
+          "passed": 4,
+          "total": 4,
+          "errors": [],
+          "cost_usd": 2.142e-05,
+          "baseline_cost_usd": 0.00072419,
+          "latency_ms": 1433.5,
+          "escalations": 0
+        },
+        {
+          "id": "m1",
+          "title": "Pair summing to target",
+          "level": "medium",
+          "difficulty": 0.483,
+          "model": "meta-llama/Llama-3.3-70B-Instruct",
+          "label": "Llama 3.3 70B",
+          "solved": true,
+          "passed": 3,
+          "total": 3,
+          "errors": [],
+          "cost_usd": 0.00014697,
+          "baseline_cost_usd": 0.00041692,
+          "latency_ms": 865.4,
+          "escalations": 0
+        },
+        {
+          "id": "m2",
+          "title": "Merge overlapping ranges",
+          "level": "medium",
+          "difficulty": 0.353,
+          "model": "openai/gpt-oss-20b",
+          "label": "GPT-OSS 20B",
+          "solved": true,
+          "passed": 3,
+          "total": 3,
+          "errors": [],
+          "cost_usd": 6.923e-05,
+          "baseline_cost_usd": 0.00218016,
+          "latency_ms": 4705.1,
+          "escalations": 0
+        },
+        {
+          "id": "m3",
+          "title": "Longest run of distinct characters",
+          "level": "medium",
+          "difficulty": 0.339,
+          "model": "openai/gpt-oss-20b",
+          "label": "GPT-OSS 20B",
+          "solved": true,
+          "passed": 4,
+          "total": 4,
+          "errors": [],
+          "cost_usd": 4.202e-05,
+          "baseline_cost_usd": 0.00134734,
+          "latency_ms": 2859.6,
+          "escalations": 0
+        },
+        {
+          "id": "m4",
+          "title": "Balanced brackets",
+          "level": "medium",
+          "difficulty": 0.351,
+          "model": "openai/gpt-oss-20b",
+          "label": "GPT-OSS 20B",
+          "solved": true,
+          "passed": 5,
+          "total": 5,
+          "errors": [],
+          "cost_usd": 2.933e-05,
+          "baseline_cost_usd": 0.00096316,
+          "latency_ms": 1921.4,
+          "escalations": 0
+        },
+        {
+          "id": "m5",
+          "title": "Group anagrams",
+          "level": "medium",
+          "difficulty": 0.511,
+          "model": "meta-llama/Llama-3.3-70B-Instruct",
+          "label": "Llama 3.3 70B",
+          "solved": false,
+          "passed": 2,
+          "total": 3,
+          "errors": [
+            "got [['ate', 'eat', 'tea'], ['nat', 'tan'], ['bat']] want [['ate', 'eat', 'tea'], ['bat'], ['nat', 'tan']]"
+          ],
+          "cost_usd": 0.00015975,
+          "baseline_cost_usd": 0.00048555,
+          "latency_ms": 934.4,
+          "escalations": 0
+        },
+        {
+          "id": "h1",
+          "title": "Median of two sorted lists",
+          "level": "hard",
+          "difficulty": 0.401,
+          "model": "meta-llama/Llama-3.3-70B-Instruct",
+          "label": "Llama 3.3 70B",
+          "solved": true,
+          "passed": 4,
+          "total": 4,
+          "errors": [],
+          "cost_usd": 0.00014697,
+          "baseline_cost_usd": 0.00045932,
+          "latency_ms": 946.0,
+          "escalations": 0
+        },
+        {
+          "id": "h2",
+          "title": "Longest increasing subsequence",
+          "level": "hard",
+          "difficulty": 0.393,
+          "model": "openai/gpt-oss-20b",
+          "label": "GPT-OSS 20B",
+          "solved": true,
+          "passed": 4,
+          "total": 4,
+          "errors": [],
+          "cost_usd": 6.372e-05,
+          "baseline_cost_usd": 0.00200994,
+          "latency_ms": 4421.3,
+          "escalations": 0
+        },
+        {
+          "id": "h3",
+          "title": "Word segmentation",
+          "level": "hard",
+          "difficulty": 0.413,
+          "model": "meta-llama/Llama-3.3-70B-Instruct",
+          "label": "Llama 3.3 70B",
+          "solved": true,
+          "passed": 4,
+          "total": 4,
+          "errors": [],
+          "cost_usd": 0.00014413,
+          "baseline_cost_usd": 0.00041168,
+          "latency_ms": 1061.3,
+          "escalations": 0
+        },
+        {
+          "id": "h4",
+          "title": "Smallest covering window",
+          "level": "hard",
+          "difficulty": 0.409,
+          "model": "meta-llama/Llama-3.3-70B-Instruct",
+          "label": "Llama 3.3 70B",
+          "solved": true,
+          "passed": 4,
+          "total": 4,
+          "errors": [],
+          "cost_usd": 0.0002769,
+          "baseline_cost_usd": 0.00115485,
+          "latency_ms": 2902.3,
+          "escalations": 0
+        }
+      ],
+      "policy": [
+        {
+          "bucket": 0,
+          "bucket_label": "0.0-0.2",
+          "start_tier": 0,
+          "start_model": "GPT-OSS 20B",
+          "tiers": {
+            "GPT-OSS 20B": {
+              "attempts": 0,
+              "successes": 0,
+              "success_rate": null
+            },
+            "Llama 3.3 70B": {
+              "attempts": 0,
+              "successes": 0,
+              "success_rate": null
+            },
+            "DeepSeek V4-Pro": {
+              "attempts": 0,
+              "successes": 0,
+              "success_rate": null
+            }
+          }
+        },
+        {
+          "bucket": 1,
+          "bucket_label": "0.2-0.4",
+          "start_tier": 0,
+          "start_model": "GPT-OSS 20B",
+          "tiers": {
+            "GPT-OSS 20B": {
+              "attempts": 7,
+              "successes": 7,
+              "success_rate": 1.0
+            },
+            "Llama 3.3 70B": {
+              "attempts": 0,
+              "successes": 0,
+              "success_rate": null
+            },
+            "DeepSeek V4-Pro": {
+              "attempts": 0,
+              "successes": 0,
+              "success_rate": null
+            }
+          }
+        },
+        {
+          "bucket": 2,
+          "bucket_label": "0.4-0.6",
+          "start_tier": 1,
+          "start_model": "Llama 3.3 70B",
+          "tiers": {
+            "GPT-OSS 20B": {
+              "attempts": 0,
+              "successes": 0,
+              "success_rate": null
+            },
+            "Llama 3.3 70B": {
+              "attempts": 7,
+              "successes": 7,
+              "success_rate": 1.0
+            },
+            "DeepSeek V4-Pro": {
+              "attempts": 0,
+              "successes": 0,
+              "success_rate": null
+            }
+          }
+        },
+        {
+          "bucket": 3,
+          "bucket_label": "0.6-0.8",
+          "start_tier": 1,
+          "start_model": "Llama 3.3 70B",
+          "tiers": {
+            "GPT-OSS 20B": {
+              "attempts": 0,
+              "successes": 0,
+              "success_rate": null
+            },
+            "Llama 3.3 70B": {
+              "attempts": 0,
+              "successes": 0,
+              "success_rate": null
+            },
+            "DeepSeek V4-Pro": {
+              "attempts": 0,
+              "successes": 0,
+              "success_rate": null
+            }
+          }
+        },
+        {
+          "bucket": 4,
+          "bucket_label": "0.8-1.0",
+          "start_tier": 2,
+          "start_model": "DeepSeek V4-Pro",
+          "tiers": {
+            "GPT-OSS 20B": {
+              "attempts": 0,
+              "successes": 0,
+              "success_rate": null
+            },
+            "Llama 3.3 70B": {
+              "attempts": 0,
+              "successes": 0,
+              "success_rate": null
+            },
+            "DeepSeek V4-Pro": {
+              "attempts": 0,
+              "successes": 0,
+              "success_rate": null
+            }
+          }
+        }
+      ]
+    },
+    "naive": {
+      "arm": "naive",
+      "solved": 14,
+      "tasks": 14,
+      "solve_rate": 1.0,
+      "cost_usd": 0.000706,
+      "p50_latency_ms": 2163.3,
+      "calls": 15,
+      "by_level": {
+        "easy": {
+          "solved": 5,
+          "total": 5,
+          "cost_usd": 0.00017141
+        },
+        "medium": {
+          "solved": 5,
+          "total": 5,
+          "cost_usd": 0.0001907
+        },
+        "hard": {
+          "solved": 4,
+          "total": 4,
+          "cost_usd": 0.00034377
+        }
+      },
+      "rows": [
+        {
+          "id": "e1",
+          "title": "Sum of even numbers",
+          "level": "easy",
+          "difficulty": 0.458,
+          "model": "openai/gpt-oss-20b",
+          "label": "GPT-OSS 20B",
+          "solved": true,
+          "passed": 4,
+          "total": 4,
+          "errors": [],
+          "cost_usd": 5.267e-05,
+          "baseline_cost_usd": 0.00167334,
+          "latency_ms": 3652.4,
+          "escalations": 0
+        },
+        {
+          "id": "e2",
+          "title": "Reverse word order",
+          "level": "easy",
+          "difficulty": 0.341,
+          "model": "openai/gpt-oss-20b",
+          "label": "GPT-OSS 20B",
+          "solved": true,
+          "passed": 3,
+          "total": 3,
+          "errors": [],
+          "cost_usd": 2.85e-05,
+          "baseline_cost_usd": 0.0009355,
+          "latency_ms": 1827.5,
+          "escalations": 0
+        },
+        {
+          "id": "e3",
+          "title": "Count vowels",
+          "level": "easy",
+          "difficulty": 0.343,
+          "model": "openai/gpt-oss-20b",
+          "label": "GPT-OSS 20B",
+          "solved": true,
+          "passed": 4,
+          "total": 4,
+          "errors": [],
+          "cost_usd": 2.211e-05,
+          "baseline_cost_usd": 0.00074402,
+          "latency_ms": 1343.4,
+          "escalations": 0
+        },
+        {
+          "id": "e4",
+          "title": "Largest gap",
+          "level": "easy",
+          "difficulty": 0.408,
+          "model": "openai/gpt-oss-20b",
+          "label": "GPT-OSS 20B",
+          "solved": true,
+          "passed": 4,
+          "total": 4,
+          "errors": [],
+          "cost_usd": 3.631e-05,
+          "baseline_cost_usd": 0.00117697,
+          "latency_ms": 3536.5,
+          "escalations": 0
+        },
+        {
+          "id": "e5",
+          "title": "Palindrome check",
+          "level": "easy",
+          "difficulty": 0.361,
+          "model": "openai/gpt-oss-20b",
+          "label": "GPT-OSS 20B",
+          "solved": true,
+          "passed": 4,
+          "total": 4,
+          "errors": [],
+          "cost_usd": 3.182e-05,
+          "baseline_cost_usd": 0.00104099,
+          "latency_ms": 2163.3,
+          "escalations": 0
+        },
+        {
+          "id": "m1",
+          "title": "Pair summing to target",
+          "level": "medium",
+          "difficulty": 0.483,
+          "model": "openai/gpt-oss-20b",
+          "label": "GPT-OSS 20B",
+          "solved": true,
+          "passed": 3,
+          "total": 3,
+          "errors": [],
+          "cost_usd": 3.395e-05,
+          "baseline_cost_usd": 0.00110825,
+          "latency_ms": 2076.1,
+          "escalations": 0
+        },
+        {
+          "id": "m2",
+          "title": "Merge overlapping ranges",
+          "level": "medium",
+          "difficulty": 0.353,
+          "model": "openai/gpt-oss-20b",
+          "label": "GPT-OSS 20B",
+          "solved": true,
+          "passed": 3,
+          "total": 3,
+          "errors": [],
+          "cost_usd": 4.648e-05,
+          "baseline_cost_usd": 0.00148716,
+          "latency_ms": 3074.5,
+          "escalations": 0
+        },
+        {
+          "id": "m3",
+          "title": "Longest run of distinct characters",
+          "level": "medium",
+          "difficulty": 0.339,
+          "model": "openai/gpt-oss-20b",
+          "label": "GPT-OSS 20B",
+          "solved": true,
+          "passed": 4,
+          "total": 4,
+          "errors": [],
+          "cost_usd": 4.215e-05,
+          "baseline_cost_usd": 0.0013513,
+          "latency_ms": 2829.7,
+          "escalations": 0
+        },
+        {
+          "id": "m4",
+          "title": "Balanced brackets",
+          "level": "medium",
+          "difficulty": 0.351,
+          "model": "openai/gpt-oss-20b",
+          "label": "GPT-OSS 20B",
+          "solved": true,
+          "passed": 5,
+          "total": 5,
+          "errors": [],
+          "cost_usd": 2.79e-05,
+          "baseline_cost_usd": 0.0009196,
+          "latency_ms": 1680.1,
+          "escalations": 0
+        },
+        {
+          "id": "m5",
+          "title": "Group anagrams",
+          "level": "medium",
+          "difficulty": 0.511,
+          "model": "openai/gpt-oss-20b",
+          "label": "GPT-OSS 20B",
+          "solved": true,
+          "passed": 3,
+          "total": 3,
+          "errors": [],
+          "cost_usd": 4.022e-05,
+          "baseline_cost_usd": 0.00129964,
+          "latency_ms": 2554.5,
+          "escalations": 0
+        },
+        {
+          "id": "h1",
+          "title": "Median of two sorted lists",
+          "level": "hard",
+          "difficulty": 0.401,
+          "model": "meta-llama/Llama-3.3-70B-Instruct",
+          "label": "Llama 3.3 70B",
+          "solved": true,
+          "passed": 4,
+          "total": 4,
+          "errors": [],
+          "cost_usd": 0.00021866,
+          "baseline_cost_usd": 0.00045932,
+          "latency_ms": 6112.2,
+          "escalations": 0
+        },
+        {
+          "id": "h2",
+          "title": "Longest increasing subsequence",
+          "level": "hard",
+          "difficulty": 0.393,
+          "model": "openai/gpt-oss-20b",
+          "label": "GPT-OSS 20B",
+          "solved": true,
+          "passed": 4,
+          "total": 4,
+          "errors": [],
+          "cost_usd": 3.291e-05,
+          "baseline_cost_usd": 0.00107142,
+          "latency_ms": 2145.8,
+          "escalations": 0
+        },
+        {
+          "id": "h3",
+          "title": "Word segmentation",
+          "level": "hard",
+          "difficulty": 0.413,
+          "model": "openai/gpt-oss-20b",
+          "label": "GPT-OSS 20B",
+          "solved": true,
+          "passed": 4,
+          "total": 4,
+          "errors": [],
+          "cost_usd": 3.006e-05,
+          "baseline_cost_usd": 0.00098817,
+          "latency_ms": 1887.0,
+          "escalations": 0
+        },
+        {
+          "id": "h4",
+          "title": "Smallest covering window",
+          "level": "hard",
+          "difficulty": 0.409,
+          "model": "openai/gpt-oss-20b",
+          "label": "GPT-OSS 20B",
+          "solved": true,
+          "passed": 4,
+          "total": 4,
+          "errors": [],
+          "cost_usd": 6.214e-05,
+          "baseline_cost_usd": 0.00196498,
+          "latency_ms": 4811.7,
+          "escalations": 0
+        }
+      ],
+      "policy": null
+    }
+  },
+  "comparison": {
+    "cost_saving_vs_flagship_pct": 93.02,
+    "solve_rate_router": 0.9286,
+    "solve_rate_flagship": 0.7143,
+    "solve_rate_cheapest": 0.9286,
+    "solve_rate_retained_pct": 130.0,
+    "cheapest_cost_saving_pct": 97.3,
+    "cheapest_solve_rate_retained_pct": 130.0,
+    "mean_difficulty_by_level": {
+      "easy": 0.382,
+      "medium": 0.407,
+      "hard": 0.404
+    },
+    "solve_rate_naive": 1.0,
+    "naive_cost_usd": 0.000706,
+    "router_vs_naive_solve_delta": -0.0714,
+    "router_vs_naive_cost_pct": -95.04
+  }
+}
