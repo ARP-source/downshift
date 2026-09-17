@@ -8,7 +8,7 @@ from fastapi import FastAPI
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
 from pydantic import BaseModel
 
-from . import bench, datasets, pricing
+from . import bench, datasets, features, judge, pricing
 from .cascade import Cascade
 from .config import SETTINGS
 from .metrics import Metrics
@@ -39,6 +39,10 @@ class Ask(BaseModel):
 
 class BenchRequest(BaseModel):
     limit: int | None = None
+
+
+class Compare(BaseModel):
+    prompt: str
 
 
 def _state() -> dict:
@@ -85,6 +89,60 @@ def ask(body: Ask) -> JSONResponse:
     payload = result.as_dict()
     _feed.append(payload)
     return JSONResponse({"result": payload, "live": _live.snapshot(), "policy": _router.policy_table()})
+
+
+@app.post("/api/compare")
+def compare(body: Compare) -> JSONResponse:
+    """Run one prompt on every tier at once, without routing.
+
+    This exists so a sceptic can test the premise with their own input instead
+    of taking our eval set on trust: on an easy prompt the cheap tier matches
+    the flagship, on a hard one it visibly does not, and the price difference
+    is right there next to both answers.
+    """
+    prompt = (body.prompt or "").strip()
+    if not prompt:
+        return JSONResponse({"error": "empty prompt"}, status_code=400)
+
+    feats = features.extract(prompt)
+    decision = _router.choose(feats, key=prompt)
+
+    tiers = []
+    for model in pricing.LADDER:
+        completion = _provider.complete(
+            model,
+            prompt,
+            max_tokens=SETTINGS.max_tokens,
+            meta={"difficulty": feats.difficulty},
+        )
+        usable, why = judge.looks_usable(completion.text)
+        row = completion.as_dict()
+        row.update(
+            {
+                "usable": usable,
+                "gate_reason": why,
+                "would_route_here": pricing.tier_of(model) == decision.tier,
+            }
+        )
+        tiers.append(row)
+
+    flagship = next((t for t in tiers if t["model"] == pricing.FLAGSHIP), None)
+    chosen = next((t for t in tiers if t["would_route_here"]), None)
+    saving = None
+    if flagship and chosen and flagship["cost_usd"] > 0:
+        saving = round(
+            (flagship["cost_usd"] - chosen["cost_usd"]) / flagship["cost_usd"] * 100.0, 1
+        )
+
+    return JSONResponse(
+        {
+            "prompt": prompt,
+            "features": feats.as_dict(),
+            "decision": decision.as_dict(),
+            "tiers": tiers,
+            "saving_pct": saving,
+        }
+    )
 
 
 @app.post("/api/bench")

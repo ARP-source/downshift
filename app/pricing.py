@@ -9,6 +9,18 @@ from __future__ import annotations
 import os
 from dataclasses import dataclass
 
+# This module reads LADDER at import time, and it is imported before config.py
+# in several paths -- so it cannot rely on config having loaded the .env file
+# yet. Loading here too is idempotent and keeps the ladder choice honest no
+# matter which module the process touches first. Without this, a LADDER set in
+# .env is silently ignored and the default ladder is used instead.
+try:
+    from dotenv import load_dotenv
+
+    load_dotenv()
+except ModuleNotFoundError:  # pragma: no cover
+    pass
+
 
 @dataclass(frozen=True)
 class ModelSpec:

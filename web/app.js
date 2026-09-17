@@ -339,6 +339,57 @@ function render(s) {
   renderFeed(s);
 }
 
+function renderCompare(data) {
+  const host = $("compare");
+  if (!data) {
+    host.innerHTML = "";
+    return;
+  }
+  const f = data.features;
+  const d = data.decision;
+  const saving =
+    data.saving_pct == null
+      ? ""
+      : ` and costs <strong>${data.saving_pct}% less</strong> than the flagship answer beside it`;
+
+  const cards = data.tiers
+    .map((t) => {
+      const verdict = t.usable
+        ? '<span class="verdict pass">passes the gate</span>'
+        : `<span class="verdict fail">fails the gate &mdash; ${esc(t.gate_reason)}</span>`;
+      const body = t.ok
+        ? esc(t.text || "(empty)")
+        : `<em>${esc(t.error || "call failed")}</em>`;
+      return `<div class="cmp${t.would_route_here ? " picked" : ""}">
+          <div class="top">
+            <span class="model">${esc(t.label)}</span>
+            ${t.would_route_here ? '<span class="tag">router picks</span>' : ""}
+          </div>
+          <div class="answer">${body}</div>
+          <div class="meta">${usd(t.cost_usd)} &middot; ${Math.round(t.latency_ms)} ms &middot;
+            ${t.input_tokens} in / ${t.output_tokens} out</div>
+          ${verdict}
+        </div>`;
+    })
+    .join("");
+
+  // Without this, an exploration probe looks like the router contradicting its
+  // own policy table, which reads as a bug to anyone watching.
+  const why = d.explored
+    ? ` This one is an <strong>exploration probe</strong>: the policy would normally
+        start a band this hard higher up, and 20% of requests deliberately try one
+        tier cheaper to find out whether that is wasted money.`
+    : "";
+
+  host.innerHTML = `
+    <div class="cmp-head">
+      Difficulty <strong>${f.difficulty.toFixed(3)}</strong>
+      &mdash; ${esc(f.reasons.join("; "))}.
+      The router would send this to <strong>${esc(d.label)}</strong>${saving}.${why}
+    </div>
+    <div class="cmp-grid">${cards}</div>`;
+}
+
 /* ---------- wiring ----------------------------------------------------- */
 
 async function refresh() {
@@ -366,6 +417,25 @@ async function loadSamples() {
       });
     });
 }
+
+$("compare-btn").addEventListener("click", async () => {
+  const prompt = $("ask-input").value.trim();
+  if (!prompt) return;
+  const btn = $("compare-btn");
+  btn.disabled = true;
+  btn.textContent = "Asking every tier…";
+  try {
+    const res = await fetch("/api/compare", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ prompt }),
+    });
+    renderCompare(await res.json());
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "Compare all tiers";
+  }
+});
 
 $("run-bench").addEventListener("click", async (e) => {
   const btn = e.currentTarget;
