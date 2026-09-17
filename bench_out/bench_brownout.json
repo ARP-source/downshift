@@ -1,0 +1,61 @@
+{
+  "items": 24,
+  "provider": "live",
+  "scenarios": [
+    {
+      "mode": "off",
+      "arm": "router",
+      "requests": 24,
+      "answered": 24,
+      "answered_pct": 100.0,
+      "quality": 1.0,
+      "cost_usd": 0.000249,
+      "failovers": 0,
+      "simulated": false
+    },
+    {
+      "mode": "off",
+      "arm": "flagship",
+      "requests": 24,
+      "answered": 24,
+      "answered_pct": 100.0,
+      "quality": 1.0,
+      "cost_usd": 0.006906,
+      "failovers": 0,
+      "simulated": false
+    },
+    {
+      "mode": "flagship_down",
+      "arm": "router",
+      "requests": 24,
+      "answered": 24,
+      "answered_pct": 100.0,
+      "quality": 1.0,
+      "cost_usd": 0.000233,
+      "failovers": 0,
+      "simulated": false
+    },
+    {
+      "mode": "flagship_down",
+      "arm": "flagship",
+      "requests": 24,
+      "answered": 0,
+      "answered_pct": 0.0,
+      "quality": 0.0,
+      "cost_usd": 0.0,
+      "failovers": 24,
+      "simulated": false
+    },
+    {
+      "mode": "top_two_down",
+      "arm": "router",
+      "requests": 24,
+      "answered": 23,
+      "answered_pct": 95.8,
+      "quality": 0.9583,
+      "cost_usd": 0.000223,
+      "failovers": 3,
+      "simulated": false
+    }
+  ]
+}

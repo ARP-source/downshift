@@ -48,7 +48,7 @@ def _load_saved(name: str) -> dict | None:
 
 
 _last_report: dict | None = _load_saved("live") or _load_saved("latest")
-_last_brownout: dict | None = None
+_last_brownout: dict | None = _load_saved("brownout")
 _last_code: dict | None = _load_saved("code")
 
 
@@ -207,6 +207,11 @@ def run_bench(body: BenchRequest) -> JSONResponse:
 def brownout(body: BrownoutRequest) -> JSONResponse:
     global _last_brownout
     _last_brownout = bench.run_brownout(limit=body.limit or 30, settings=SETTINGS)
+    # Persist like the other runs: a demo should survive a restart.
+    bench.OUT_DIR.mkdir(parents=True, exist_ok=True)
+    (bench.OUT_DIR / "bench_brownout.json").write_text(
+        json.dumps(_last_brownout, indent=2), encoding="utf-8"
+    )
     return JSONResponse(_last_brownout)
 
 
