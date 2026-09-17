@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cascade Router</title>
+<style>
+  :root {
+    color-scheme: light;
+    --surface-0: #f4f3f0;
+    --surface-1: #fcfcfb;
+    --surface-2: #eeede9;
+    --border:    #dcdbd5;
+    --text-primary:   #0b0b0b;
+    --text-secondary: #52514e;
+    --text-muted:     #7a7973;
+    --router:   #2a78d6;
+    --flagship: #eb6834;
+    --cheapest: #1baf7a;
+    --good:     #008300;
+    --warn:     #eda100;
+    --bad:      #e34948;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --surface-0: #121211;
+      --surface-1: #1a1a19;
+      --surface-2: #242423;
+      --border:    #383835;
+      --text-primary:   #ffffff;
+      --text-secondary: #c3c2b7;
+      --text-muted:     #8f8e85;
+      --router:   #3987e5;
+      --flagship: #d95926;
+      --cheapest: #199e70;
+      --good:     #4caf50;
+      --warn:     #c98500;
+      --bad:      #e66767;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding-block: 28px;
+    padding-inline: 20px;
+    background: var(--surface-0);
+    color: var(--text-primary);
+    font: 14px/1.5 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  .wrap { max-width: 1100px; margin: 0 auto; }
+  h1 { font-size: 24px; margin: 0; letter-spacing: -0.01em; }
+  h2 { font-size: 15px; margin: 0 0 4px; letter-spacing: -0.005em; }
+  .sub { color: var(--text-secondary); margin: 6px 0 0; max-width: 62ch; }
+  .note { color: var(--text-muted); font-size: 12.5px; margin: 0 0 14px; max-width: 70ch; }
+  header { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+
+  .badge {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.06em;
+    text-transform: uppercase; padding: 3px 9px; border-radius: 999px;
+    border: 1px solid currentColor;
+  }
+  .badge.mock { color: var(--warn); }
+  .badge.live { color: var(--good); }
+
+  .banner {
+    margin: 16px 0 0; padding: 10px 14px; border-radius: 8px;
+    background: var(--surface-2); border: 1px solid var(--border);
+    color: var(--text-secondary); font-size: 12.5px;
+  }
+  .banner strong { color: var(--text-primary); }
+
+  .panel {
+    background: var(--surface-1); border: 1px solid var(--border);
+    border-radius: 10px; padding: 18px; margin-top: 16px;
+  }
+
+  .ladder { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+  .tier {
+    flex: 1 1 200px; background: var(--surface-1); border: 1px solid var(--border);
+    border-radius: 10px; padding: 12px 14px;
+  }
+  .tier .name { font-weight: 650; display: flex; align-items: center; gap: 7px; }
+  .tier .dot { width: 9px; height: 9px; border-radius: 50%; flex: none; }
+  .tier .price { color: var(--text-secondary); font-size: 12.5px; margin-top: 3px; }
+  .tier .rel { font-size: 12.5px; margin-top: 4px; color: var(--text-muted); }
+
+  .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; margin-top: 16px; }
+  .kpi { background: var(--surface-1); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+  .kpi .label { font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); }
+  .kpi .value { font-size: 30px; font-weight: 680; letter-spacing: -0.02em; margin-top: 4px; font-variant-numeric: tabular-nums; }
+  .kpi .foot { font-size: 12px; color: var(--text-secondary); margin-top: 3px; }
+
+  .charts { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+  figure { margin: 0; }
+  figcaption { font-size: 12.5px; color: var(--text-secondary); margin-bottom: 8px; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th, td { text-align: right; padding: 7px 8px; border-bottom: 1px solid var(--border); }
+  th:first-child, td:first-child { text-align: left; }
+  th { font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--text-muted); font-weight: 600; }
+  td { font-variant-numeric: tabular-nums; }
+  tbody tr:last-child td { border-bottom: none; }
+  .swatch { display: inline-block; width: 9px; height: 9px; border-radius: 2px; margin-right: 7px; }
+  .scroller { overflow-x: auto; }
+
+  button {
+    font: inherit; font-weight: 600; padding: 8px 15px; border-radius: 7px;
+    border: 1px solid var(--border); background: var(--surface-2);
+    color: var(--text-primary); cursor: pointer;
+  }
+  button.primary { background: var(--router); border-color: var(--router); color: #fff; }
+  button:disabled { opacity: 0.55; cursor: progress; }
+  input[type=text] {
+    font: inherit; padding: 8px 11px; border-radius: 7px; flex: 1 1 320px; min-width: 0;
+    border: 1px solid var(--border); background: var(--surface-0); color: var(--text-primary);
+  }
+  .row { display: flex; gap: 9px; flex-wrap: wrap; align-items: center; }
+  .chips { display: flex; gap: 7px; flex-wrap: wrap; margin: 10px 0 14px; }
+  .chip {
+    font-size: 12px; padding: 4px 10px; border-radius: 999px; cursor: pointer;
+    border: 1px solid var(--border); background: var(--surface-2); color: var(--text-secondary);
+  }
+  .chip:hover { color: var(--text-primary); }
+  .empty { color: var(--text-muted); font-size: 13px; padding: 10px 0; }
+  .why { color: var(--text-muted); font-size: 11.5px; }
+  .adapt { font-size: 12.5px; color: var(--text-secondary); padding: 5px 0; border-bottom: 1px solid var(--border); }
+  .adapt:last-child { border-bottom: none; }
+  .bar-label { font-size: 11.5px; font-variant-numeric: tabular-nums; fill: var(--text-secondary); }
+  .bar-name { font-size: 12px; fill: var(--text-primary); }
+  .axis { stroke: var(--border); }
+  .gridline { stroke: var(--border); stroke-dasharray: 2 3; }
+  .tick { font-size: 11px; fill: var(--text-muted); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <h1>Cascade Router</h1>
+    <span class="badge" id="mode-badge">loading</span>
+  </header>
+  <p class="sub">
+    Most requests do not need a flagship model. This routes each one to the cheapest
+    tier that can actually answer it, and escalates only when the answer fails a quality gate.
+  </p>
+
+  <div class="banner" id="mode-banner"></div>
+
+  <section class="ladder" id="ladder"></section>
+
+  <section class="kpis" id="kpis"></section>
+
+  <section class="panel">
+    <div class="row" style="justify-content: space-between; align-items: flex-start;">
+      <div>
+        <h2>Router against both baselines</h2>
+        <p class="note" id="bench-note">No benchmark run yet.</p>
+      </div>
+      <button class="primary" id="run-bench">Run benchmark</button>
+    </div>
+    <div class="charts">
+      <figure>
+        <figcaption>Total cost for the whole eval set, USD &mdash; lower is better</figcaption>
+        <div id="chart-cost"></div>
+      </figure>
+      <figure>
+        <figcaption>Answers graded correct &mdash; higher is better</figcaption>
+        <div id="chart-quality"></div>
+      </figure>
+    </div>
+    <div class="scroller"><table id="arm-table"></table></div>
+  </section>
+
+  <section class="panel">
+    <h2>What the policy learned</h2>
+    <p class="note">Savings per pass over the same traffic, as the policy gathers evidence about which tier each difficulty band actually needs.</p>
+    <div id="chart-learn"></div>
+    <div id="adaptations"></div>
+  </section>
+
+  <section class="panel">
+    <h2>Current routing policy</h2>
+    <p class="note">Difficulty bucket to starting tier, with the success rate observed for every tier tried in that bucket.
+       <span id="policy-source"></span></p>
+    <div class="scroller"><table id="policy-table"></table></div>
+  </section>
+
+  <section class="panel">
+    <h2>Send a request through it</h2>
+    <p class="note">Every decision explains itself: which signals set the difficulty, which tier was picked, and what it cost against the flagship price.</p>
+    <form id="ask-form" class="row">
+      <input type="text" id="ask-input" placeholder="Ask anything, or pick a sample below" autocomplete="off">
+      <button class="primary" type="submit" id="ask-btn">Route it</button>
+    </form>
+    <div class="chips" id="samples"></div>
+    <div class="scroller"><table id="feed"></table></div>
+  </section>
+
+</div>
+<script src="app.js"></script>
+</body>
+</html>

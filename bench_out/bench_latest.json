@@ -3,7 +3,7 @@
   "provider": "mock",
   "simulated": true,
   "quality_floor": 0.5,
-  "elapsed_s": 12.42,
+  "elapsed_s": 12.38,
   "dataset": {
     "total": 74,
     "checkable": 70,

@@ -109,9 +109,20 @@ class AnthropicProvider:
         # max_retries=1: the cascade decides when to escalate vs retry.
         self._client = anthropic.Anthropic(timeout=settings.timeout_s, max_retries=1)
         self._settings = settings
+        # Optional request features. Either the installed SDK or the account
+        # may reject these; each is dropped permanently on first rejection so
+        # one probe costs one retry rather than failing every later call.
         self._server_fallback = settings.server_fallback
+        self._use_effort = True
+        self.degraded: list[str] = []
 
-    def _kwargs(self, model: str, prompt: str, max_tokens: int) -> dict:
+    def _kwargs(self, model: str, prompt: str, max_tokens: int) -> tuple[dict, bool]:
+        """Build request kwargs. Returns (kwargs, using_server_fallback).
+
+        output_config and fallbacks are not typed parameters in this SDK line,
+        so they travel in extra_body. Passing them as keyword arguments raises
+        TypeError rather than an API error, which no error handler would catch.
+        """
         spec = pricing.spec(model)
         kwargs: dict = {
             "model": model,
@@ -119,12 +130,17 @@ class AnthropicProvider:
             "system": SYSTEM_PROMPT,
             "messages": [{"role": "user", "content": prompt}],
         }
-        # Haiku 4.5 rejects output_config.effort; the Sonnet 5 / Opus 5 tiers
-        # accept it. Low effort is the cost lever here, in preference to
-        # disabling thinking outright.
-        if spec.supports_effort:
-            kwargs["output_config"] = {"effort": self._settings.effort}
-        return kwargs
+        extra: dict = {}
+        # Haiku 4.5 rejects effort; the Sonnet 5 / Opus 5 tiers accept it. Low
+        # effort is the cost lever, in preference to disabling thinking.
+        if spec.supports_effort and self._use_effort:
+            extra["output_config"] = {"effort": self._settings.effort}
+        using_fallback = self._server_fallback and spec.supports_server_fallback
+        if using_fallback:
+            extra["fallbacks"] = "default"
+        if extra:
+            kwargs["extra_body"] = extra
+        return kwargs, using_fallback
 
     def _fail(self, model: str, t0: float, kind: str, exc: Exception) -> Completion:
         return Completion(
@@ -135,43 +151,61 @@ class AnthropicProvider:
             latency_ms=(time.perf_counter() - t0) * 1000.0,
         )
 
+    def _drop_feature(self, using_fallback: bool, model: str) -> bool:
+        """Turn off one optional feature after a rejection. False if none left."""
+        if using_fallback:
+            self._server_fallback = False
+            self.degraded.append("server-side fallback")
+            return True
+        if self._use_effort and pricing.spec(model).supports_effort:
+            self._use_effort = False
+            self.degraded.append("output_config.effort")
+            return True
+        return False
+
     def complete(
         self, model: str, prompt: str, *, max_tokens: int, meta: dict | None = None
     ) -> Completion:
-        kwargs = self._kwargs(model, prompt, max_tokens)
-        spec = pricing.spec(model)
-        want_fallback = self._server_fallback and spec.supports_server_fallback
         t0 = time.perf_counter()
+        resp = None
 
-        try:
-            if want_fallback:
-                try:
-                    # Server-side refusal fallback: the API routes around a
-                    # refusal instead of handing back a dead turn.
+        # At most one retry per optional feature, then give up honestly.
+        for _ in range(3):
+            kwargs, using_fallback = self._kwargs(model, prompt, max_tokens)
+            try:
+                if using_fallback:
                     resp = self._client.beta.messages.create(
-                        betas=["server-side-fallback-2026-07-01"],
-                        fallbacks="default",
-                        **kwargs,
+                        betas=["server-side-fallback-2026-07-01"], **kwargs
                     )
-                except self._sdk.BadRequestError:
-                    # Beta not enabled for this account. Stop asking for it.
-                    self._server_fallback = False
+                else:
                     resp = self._client.messages.create(**kwargs)
-            else:
-                resp = self._client.messages.create(**kwargs)
-        # Most specific first: NotFoundError and RateLimitError subclass
-        # APIStatusError, and APITimeoutError subclasses APIConnectionError.
-        except self._sdk.NotFoundError as exc:
-            return self._fail(model, t0, "not_found", exc)
-        except self._sdk.RateLimitError as exc:
-            return self._fail(model, t0, "rate_limit", exc)
-        except self._sdk.APITimeoutError as exc:
-            return self._fail(model, t0, "timeout", exc)
-        except self._sdk.APIStatusError as exc:
-            status = getattr(exc, "status_code", 0) or 0
-            return self._fail(model, t0, "server" if status >= 500 else "api", exc)
-        except self._sdk.APIConnectionError as exc:
-            return self._fail(model, t0, "transport", exc)
+                break
+            # Most specific first: NotFoundError and RateLimitError subclass
+            # APIStatusError, and APITimeoutError subclasses APIConnectionError.
+            except self._sdk.BadRequestError as exc:
+                # A 400 may mean the optional feature is unavailable here.
+                if self._drop_feature(using_fallback, model):
+                    continue
+                return self._fail(model, t0, "api", exc)
+            except TypeError as exc:
+                # SDK build does not know a parameter at all.
+                if self._drop_feature(using_fallback, model):
+                    continue
+                return self._fail(model, t0, "api", exc)
+            except self._sdk.NotFoundError as exc:
+                return self._fail(model, t0, "not_found", exc)
+            except self._sdk.RateLimitError as exc:
+                return self._fail(model, t0, "rate_limit", exc)
+            except self._sdk.APITimeoutError as exc:
+                return self._fail(model, t0, "timeout", exc)
+            except self._sdk.APIStatusError as exc:
+                status = getattr(exc, "status_code", 0) or 0
+                return self._fail(model, t0, "server" if status >= 500 else "api", exc)
+            except self._sdk.APIConnectionError as exc:
+                return self._fail(model, t0, "transport", exc)
+
+        if resp is None:
+            return self._fail(model, t0, "api", RuntimeError("no response after degradation"))
 
         latency = (time.perf_counter() - t0) * 1000.0
         usage = getattr(resp, "usage", None)
