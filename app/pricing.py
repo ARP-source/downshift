@@ -17,6 +17,11 @@ class ModelSpec:
     input_per_mtok: float
     output_per_mtok: float
     context: int
+    # output_config.effort is rejected by Haiku 4.5 and accepted by the
+    # Sonnet 5 / Opus 5 tiers. Request shaping reads this, never a model id.
+    supports_effort: bool
+    # Server-side refusal fallback is an Opus-5-tier / Fable feature.
+    supports_server_fallback: bool
 
 
 # Ordered cheap -> expensive. Tier index is the routing ladder position.
@@ -28,6 +33,8 @@ MODELS: dict[str, ModelSpec] = {
         input_per_mtok=1.00,
         output_per_mtok=5.00,
         context=200_000,
+        supports_effort=False,
+        supports_server_fallback=False,
     ),
     "claude-sonnet-5": ModelSpec(
         model_id="claude-sonnet-5",
@@ -36,6 +43,8 @@ MODELS: dict[str, ModelSpec] = {
         input_per_mtok=2.00,
         output_per_mtok=10.00,
         context=1_000_000,
+        supports_effort=True,
+        supports_server_fallback=False,
     ),
     "claude-opus-5": ModelSpec(
         model_id="claude-opus-5",
@@ -44,6 +53,8 @@ MODELS: dict[str, ModelSpec] = {
         input_per_mtok=5.00,
         output_per_mtok=25.00,
         context=1_000_000,
+        supports_effort=True,
+        supports_server_fallback=True,
     ),
 }
 
