@@ -23,6 +23,14 @@ const ARM_LABEL = {
 };
 const ARM_ORDER = ["flagship", "router", "cheapest"];
 
+const CHAOS_LABEL = {
+  off: "Healthy",
+  flagship_down: "Flagship down (503)",
+  flagship_rate_limited: "Flagship rate limited (429)",
+  flagship_slow: "Flagship timing out",
+  top_two_down: "Top two tiers down",
+};
+
 const $ = (id) => document.getElementById(id);
 const esc = (s) =>
   String(s == null ? "" : s).replace(/[&<>"]/g, (c) =>
@@ -119,11 +127,55 @@ function lineChart(host, points) {
 
 /* ---------- sections --------------------------------------------------- */
 
+function renderChaos(s) {
+  const modes = s.chaos_modes || ["off"];
+  const active = s.chaos_mode || "off";
+  $("chaos-controls").innerHTML = modes
+    .map(
+      (m) =>
+        `<button class="${m === "off" ? "" : "danger "}${m === active ? "active" : ""}"
+                 data-mode="${esc(m)}">${esc(CHAOS_LABEL[m] || m)}</button>`
+    )
+    .join("");
+  $("chaos-controls")
+    .querySelectorAll("button")
+    .forEach((b) =>
+      b.addEventListener("click", async () => {
+        await fetch("/api/chaos", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ mode: b.dataset.mode }),
+        });
+        await refresh();
+      })
+    );
+}
+
 function renderMode(s) {
   const badge = $("mode-badge");
   const live = s.mode === "live";
   badge.className = "badge " + (live ? "live" : "mock");
   badge.textContent = live ? "live models" : "mock provider";
+
+  if (s.chaos_mode && s.chaos_mode !== "off") {
+    const banner = document.createElement("div");
+    banner.className = "chaos-on";
+    banner.textContent =
+      "Failure injected: " +
+      (CHAOS_LABEL[s.chaos_mode] || s.chaos_mode) +
+      ". Requests below are being served around it.";
+    const host = $("mode-banner");
+    host.insertAdjacentElement("afterend", banner);
+    // Remove any earlier copy so repeated refreshes do not stack banners.
+    let prev = banner.nextElementSibling;
+    while (prev) {
+      const next = prev.nextElementSibling;
+      if (prev.classList && prev.classList.contains("chaos-on")) prev.remove();
+      prev = next;
+    }
+  } else {
+    document.querySelectorAll(".chaos-on").forEach((e) => e.remove());
+  }
 
   const degraded = (s.degraded || []).length
     ? ` Unavailable request features were dropped automatically: ${s.degraded.join(", ")}.`
@@ -137,6 +189,16 @@ function renderMode(s) {
        placeholder prices, so every cost figure on this page is a placeholder too.
        Set <code>FEATHERLESS_RATES</code> to the rates from the model pages before
        quoting any of these numbers.`;
+    return;
+  }
+
+  // Live was asked for but not achieved: say so loudly rather than quietly
+  // serving simulated numbers under a live badge.
+  if (!live && s.requested_live) {
+    $("mode-banner").innerHTML =
+      `<strong>Live mode was requested but is not active.</strong> MOCK=0 is set, but no
+       usable API key was found, so the deterministic mock provider is running and every
+       number below is simulated. Put a key in <code>.env</code> and restart.`;
     return;
   }
 
@@ -331,6 +393,7 @@ function renderFeed(s) {
 
 function render(s) {
   STATE = s;
+  renderChaos(s);
   renderMode(s);
   renderLadder(s);
   renderKPIs(s);

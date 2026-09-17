@@ -12,7 +12,7 @@ from . import bench, datasets, features, judge, pricing
 from .cascade import Cascade
 from .config import SETTINGS
 from .metrics import Metrics
-from .providers import build_provider
+from .providers import ChaosProvider, build_provider
 from .router import Router
 
 WEB = Path(__file__).resolve().parent.parent / "web"
@@ -21,7 +21,8 @@ app = FastAPI(title="Cascade Router")
 
 # Long-lived objects so the live feed accumulates across requests and the
 # policy keeps learning while somebody clicks around the dashboard.
-_provider = build_provider(SETTINGS)
+# Wrapped so failures can be injected live without restarting anything.
+_provider = ChaosProvider(build_provider(SETTINGS))
 _router = Router(
     quality_floor=SETTINGS.quality_floor,
     tolerance=SETTINGS.quality_tolerance,
@@ -45,11 +46,23 @@ class Compare(BaseModel):
     prompt: str
 
 
+class Chaos(BaseModel):
+    mode: str
+
+
 def _state() -> dict:
     return {
-        "mode": "mock" if SETTINGS.mock else "live",
+        # Derived from the provider actually running, never from the config
+        # flag. Setting MOCK=0 without a usable key falls back to the mock
+        # provider, and a dashboard that then claims "live" would be presenting
+        # simulated numbers as measured ones -- the worst failure this project
+        # could have.
+        "mode": "mock" if _provider.is_mock else "live",
+        "requested_live": not SETTINGS.mock,
         "provider": _provider.name,
         "ladder_name": pricing.LADDER_NAME,
+        "chaos_mode": _provider.mode,
+        "chaos_modes": list(ChaosProvider.MODES),
         "rates_verified": pricing.RATES_VERIFIED,
         "degraded": list(getattr(_provider, "degraded", [])),
         "settings": SETTINGS.public(),
@@ -89,6 +102,13 @@ def ask(body: Ask) -> JSONResponse:
     payload = result.as_dict()
     _feed.append(payload)
     return JSONResponse({"result": payload, "live": _live.snapshot(), "policy": _router.policy_table()})
+
+
+@app.post("/api/chaos")
+def chaos(body: Chaos) -> JSONResponse:
+    """Inject a provider-side failure so degradation can be demonstrated."""
+    mode = _provider.set_mode((body.mode or "off").strip())
+    return JSONResponse({"chaos_mode": mode, "provider": _provider.name})
 
 
 @app.post("/api/compare")

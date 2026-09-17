@@ -126,6 +126,11 @@
   .why { color: var(--text-muted); font-size: 11.5px; }
   .adapt { font-size: 12.5px; color: var(--text-secondary); padding: 5px 0; border-bottom: 1px solid var(--border); }
   .adapt:last-child { border-bottom: none; }
+  .chaos-on {
+    margin: 16px 0 0; padding: 10px 14px; border-radius: 8px;
+    border: 1px solid var(--bad); color: var(--bad); font-size: 12.5px; font-weight: 600;
+  }
+  button.danger.active { background: var(--bad); border-color: var(--bad); color: #fff; }
   .cmp-head { margin: 4px 0 12px; font-size: 13px; color: var(--text-secondary); }
   .cmp-head strong { color: var(--text-primary); }
   .cmp-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; margin-bottom: 16px; }
@@ -208,6 +213,14 @@
     <p class="note">Difficulty bucket to starting tier, with the success rate observed for every tier tried in that bucket.
        <span id="policy-source"></span></p>
     <div class="scroller"><table id="policy-table"></table></div>
+  </section>
+
+  <section class="panel">
+    <h2>Break the provider</h2>
+    <p class="note">Injects a real failure at the provider boundary. An always-flagship
+      deployment stops answering entirely; this one sheds down the ladder and keeps serving.
+      Set a failure, then send a request below.</p>
+    <div class="row" id="chaos-controls"></div>
   </section>
 
   <section class="panel">

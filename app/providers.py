@@ -449,6 +449,81 @@ class OpenAICompatibleProvider:
         )
 
 
+class ChaosProvider:
+    """Wraps any provider and injects provider-side failures on demand.
+
+    The point is not to simulate bugs in our code -- it is to answer the
+    question an operator actually cares about: when the model you depend on
+    stops answering, does your product stop too? Escalation already handles
+    quality; this exercises the same machinery against availability.
+
+    Works identically over the mock and live providers, so the failure story
+    can be demonstrated without waiting for a real outage.
+    """
+
+    MODES = ("off", "flagship_down", "flagship_slow", "flagship_rate_limited", "top_two_down")
+
+    def __init__(self, inner: Provider) -> None:
+        self._inner = inner
+        self.mode = "off"
+
+    @property
+    def name(self) -> str:
+        return self._inner.name if self.mode == "off" else f"{self._inner.name}+chaos:{self.mode}"
+
+    @property
+    def inner_name(self) -> str:
+        return self._inner.name
+
+    @property
+    def is_mock(self) -> bool:
+        return self._inner.name == "mock"
+
+    @property
+    def degraded(self) -> list:
+        return list(getattr(self._inner, "degraded", []))
+
+    def set_mode(self, mode: str) -> str:
+        self.mode = mode if mode in self.MODES else "off"
+        return self.mode
+
+    def _injected(self, model: str) -> Completion | None:
+        tier = pricing.tier_of(model)
+        top = pricing.MAX_TIER
+        if self.mode == "flagship_down" and tier == top:
+            return Completion(
+                model=model, ok=False, error="injected: provider returned 503",
+                error_kind="server", latency_ms=120.0,
+            )
+        if self.mode == "flagship_rate_limited" and tier == top:
+            return Completion(
+                model=model, ok=False, error="injected: 429 rate limited",
+                error_kind="rate_limit", latency_ms=90.0,
+            )
+        if self.mode == "flagship_slow" and tier == top:
+            return Completion(
+                model=model, ok=False, error="injected: request timed out",
+                error_kind="timeout", latency_ms=float(self._timeout_ms()),
+            )
+        if self.mode == "top_two_down" and tier >= top - 1:
+            return Completion(
+                model=model, ok=False, error="injected: provider returned 503",
+                error_kind="server", latency_ms=120.0,
+            )
+        return None
+
+    def _timeout_ms(self) -> float:
+        return 30000.0
+
+    def complete(
+        self, model: str, prompt: str, *, max_tokens: int, meta: dict | None = None
+    ) -> Completion:
+        injected = self._injected(model)
+        if injected is not None:
+            return injected
+        return self._inner.complete(model, prompt, max_tokens=max_tokens, meta=meta)
+
+
 def build_provider(settings: Settings) -> Provider:
     """Pick a provider. Falls back to mock rather than failing to start."""
     if settings.mock:
