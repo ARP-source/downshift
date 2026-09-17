@@ -55,6 +55,7 @@ class Settings:
 
     # --- routing policy ---
     quality_floor: float
+    quality_tolerance: float
     learn: bool
     slo_latency_ms: float
 
@@ -81,9 +82,15 @@ def load_settings() -> Settings:
         timeout_s=_num("TIMEOUT_S", 30.0),
         server_fallback=_flag("ENABLE_SERVER_FALLBACK", True),
         max_attempts_per_tier=_int("MAX_ATTEMPTS_PER_TIER", 2),
-        # The router must retain at least this fraction of flagship quality.
-        # Savings claims are meaningless without a quality constraint.
-        quality_floor=_num("QUALITY_FLOOR", 0.97),
+        # Absolute safety net only. If even the best tier in a bucket scores
+        # below this, stop trying to save money there and use the top tier.
+        quality_floor=_num("QUALITY_FLOOR", 0.50),
+        # The real constraint, and it is relative: a tier is acceptable if it
+        # lands within this margin of the BEST tier observed in that bucket.
+        # An absolute floor is unusable because it can sit above what even the
+        # flagship model achieves, which makes every tier look like a failure
+        # and ratchets the whole policy to the most expensive option.
+        quality_tolerance=_num("QUALITY_TOLERANCE", 0.05),
         learn=_flag("ENABLE_LEARNING", True),
         slo_latency_ms=_num("SLO_LATENCY_MS", 8000.0),
         judge_enabled=_flag("ENABLE_LLM_JUDGE", False),

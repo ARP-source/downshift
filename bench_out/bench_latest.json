@@ -1,0 +1,527 @@
+{
+  "items": 74,
+  "provider": "mock",
+  "simulated": true,
+  "quality_floor": 0.5,
+  "elapsed_s": 12.42,
+  "dataset": {
+    "total": 74,
+    "checkable": 70,
+    "open_ended": 4,
+    "by_tag": {
+      "lookup": 10,
+      "convert": 5,
+      "arithmetic": 15,
+      "classify": 6,
+      "extract": 5,
+      "reason": 18,
+      "code": 8,
+      "design": 7
+    },
+    "by_kind": {
+      "exact": 4,
+      "numeric": 39,
+      "contains": 20,
+      "yesno": 7,
+      "open": 4
+    },
+    "difficulty_min": 0.008,
+    "difficulty_mean": 0.259,
+    "difficulty_max": 1.0
+  },
+  "arms": {
+    "flagship": {
+      "arm": "flagship",
+      "metrics": {
+        "requests": 74,
+        "calls": 78,
+        "calls_per_request": 1.054,
+        "actual_cost_usd": 0.044425,
+        "baseline_cost_usd": 0.044425,
+        "judge_cost_usd": 0.0,
+        "wasted_cost_usd": 0.000755,
+        "total_cost_usd": 0.044425,
+        "savings_pct": 0.0,
+        "savings_pct_with_judge": 0.0,
+        "quality": 0.9143,
+        "graded": 70,
+        "correct": 64,
+        "p50_latency_ms": 2160.1,
+        "p95_latency_ms": 2674.0,
+        "slo_latency_ms": 8000.0,
+        "slo_pct": 100.0,
+        "escalations": 1,
+        "failovers": 4,
+        "refusals": 0,
+        "errors": 8,
+        "explorations": 0,
+        "unresolved": 5,
+        "tier_counts": {
+          "Opus 5": 69,
+          "none": 5
+        },
+        "projected_monthly_savings_usd": 0.0,
+        "simulated": true
+      },
+      "epochs": [
+        {
+          "requests": 74,
+          "calls": 78,
+          "calls_per_request": 1.054,
+          "actual_cost_usd": 0.044425,
+          "baseline_cost_usd": 0.044425,
+          "judge_cost_usd": 0.0,
+          "wasted_cost_usd": 0.000755,
+          "total_cost_usd": 0.044425,
+          "savings_pct": 0.0,
+          "savings_pct_with_judge": 0.0,
+          "quality": 0.9143,
+          "graded": 70,
+          "correct": 64,
+          "p50_latency_ms": 2160.1,
+          "p95_latency_ms": 2674.0,
+          "slo_latency_ms": 8000.0,
+          "slo_pct": 100.0,
+          "escalations": 1,
+          "failovers": 4,
+          "refusals": 0,
+          "errors": 8,
+          "explorations": 0,
+          "unresolved": 5,
+          "tier_counts": {
+            "Opus 5": 69,
+            "none": 5
+          },
+          "projected_monthly_savings_usd": 0.0,
+          "simulated": true
+        }
+      ],
+      "policy": null,
+      "adaptations": []
+    },
+    "cheapest": {
+      "arm": "cheapest",
+      "metrics": {
+        "requests": 74,
+        "calls": 76,
+        "calls_per_request": 1.027,
+        "actual_cost_usd": 0.008078,
+        "baseline_cost_usd": 0.04039,
+        "judge_cost_usd": 0.0,
+        "wasted_cost_usd": 0.00093,
+        "total_cost_usd": 0.008078,
+        "savings_pct": 80.0,
+        "savings_pct_with_judge": 80.0,
+        "quality": 0.7286,
+        "graded": 70,
+        "correct": 51,
+        "p50_latency_ms": 362.0,
+        "p95_latency_ms": 449.8,
+        "slo_latency_ms": 8000.0,
+        "slo_pct": 100.0,
+        "escalations": 7,
+        "failovers": 2,
+        "refusals": 0,
+        "errors": 4,
+        "explorations": 0,
+        "unresolved": 9,
+        "tier_counts": {
+          "Haiku 4.5": 65,
+          "none": 9
+        },
+        "projected_monthly_savings_usd": 436.65,
+        "simulated": true
+      },
+      "epochs": [
+        {
+          "requests": 74,
+          "calls": 76,
+          "calls_per_request": 1.027,
+          "actual_cost_usd": 0.008078,
+          "baseline_cost_usd": 0.04039,
+          "judge_cost_usd": 0.0,
+          "wasted_cost_usd": 0.00093,
+          "total_cost_usd": 0.008078,
+          "savings_pct": 80.0,
+          "savings_pct_with_judge": 80.0,
+          "quality": 0.7286,
+          "graded": 70,
+          "correct": 51,
+          "p50_latency_ms": 362.0,
+          "p95_latency_ms": 449.8,
+          "slo_latency_ms": 8000.0,
+          "slo_pct": 100.0,
+          "escalations": 7,
+          "failovers": 2,
+          "refusals": 0,
+          "errors": 4,
+          "explorations": 0,
+          "unresolved": 9,
+          "tier_counts": {
+            "Haiku 4.5": 65,
+            "none": 9
+          },
+          "projected_monthly_savings_usd": 436.65,
+          "simulated": true
+        }
+      ],
+      "policy": null,
+      "adaptations": []
+    },
+    "router": {
+      "arm": "router",
+      "metrics": {
+        "requests": 74,
+        "calls": 78,
+        "calls_per_request": 1.054,
+        "actual_cost_usd": 0.016126,
+        "baseline_cost_usd": 0.042925,
+        "judge_cost_usd": 0.0,
+        "wasted_cost_usd": 0.000755,
+        "total_cost_usd": 0.016126,
+        "savings_pct": 62.43,
+        "savings_pct_with_judge": 62.43,
+        "quality": 0.9143,
+        "graded": 70,
+        "correct": 64,
+        "p50_latency_ms": 421.5,
+        "p95_latency_ms": 2181.3,
+        "slo_latency_ms": 8000.0,
+        "slo_pct": 100.0,
+        "escalations": 1,
+        "failovers": 2,
+        "refusals": 0,
+        "errors": 4,
+        "explorations": 2,
+        "unresolved": 1,
+        "tier_counts": {
+          "Haiku 4.5": 46,
+          "Sonnet 5": 20,
+          "Opus 5": 7,
+          "none": 1
+        },
+        "projected_monthly_savings_usd": 362.15,
+        "simulated": true
+      },
+      "epochs": [
+        {
+          "requests": 74,
+          "calls": 81,
+          "calls_per_request": 1.095,
+          "actual_cost_usd": 0.014903,
+          "baseline_cost_usd": 0.0426,
+          "judge_cost_usd": 0.0,
+          "wasted_cost_usd": 0.001246,
+          "total_cost_usd": 0.014903,
+          "savings_pct": 65.02,
+          "savings_pct_with_judge": 65.02,
+          "quality": 0.8571,
+          "graded": 70,
+          "correct": 60,
+          "p50_latency_ms": 379.5,
+          "p95_latency_ms": 2191.8,
+          "slo_latency_ms": 8000.0,
+          "slo_pct": 100.0,
+          "escalations": 4,
+          "failovers": 2,
+          "refusals": 0,
+          "errors": 4,
+          "explorations": 2,
+          "unresolved": 1,
+          "tier_counts": {
+            "Haiku 4.5": 59,
+            "Sonnet 5": 7,
+            "Opus 5": 7,
+            "none": 1
+          },
+          "projected_monthly_savings_usd": 374.28,
+          "simulated": true
+        },
+        {
+          "requests": 74,
+          "calls": 80,
+          "calls_per_request": 1.081,
+          "actual_cost_usd": 0.013283,
+          "baseline_cost_usd": 0.042525,
+          "judge_cost_usd": 0.0,
+          "wasted_cost_usd": 0.000964,
+          "total_cost_usd": 0.013283,
+          "savings_pct": 68.76,
+          "savings_pct_with_judge": 68.76,
+          "quality": 0.8286,
+          "graded": 70,
+          "correct": 58,
+          "p50_latency_ms": 379.5,
+          "p95_latency_ms": 1790.4,
+          "slo_latency_ms": 8000.0,
+          "slo_pct": 100.0,
+          "escalations": 3,
+          "failovers": 2,
+          "refusals": 0,
+          "errors": 4,
+          "explorations": 3,
+          "unresolved": 1,
+          "tier_counts": {
+            "Haiku 4.5": 58,
+            "Sonnet 5": 11,
+            "Opus 5": 4,
+            "none": 1
+          },
+          "projected_monthly_savings_usd": 395.16,
+          "simulated": true
+        },
+        {
+          "requests": 74,
+          "calls": 81,
+          "calls_per_request": 1.095,
+          "actual_cost_usd": 0.015158,
+          "baseline_cost_usd": 0.042925,
+          "judge_cost_usd": 0.0,
+          "wasted_cost_usd": 0.001264,
+          "total_cost_usd": 0.015158,
+          "savings_pct": 64.69,
+          "savings_pct_with_judge": 64.69,
+          "quality": 0.8571,
+          "graded": 70,
+          "correct": 60,
+          "p50_latency_ms": 376.5,
+          "p95_latency_ms": 2191.8,
+          "slo_latency_ms": 8000.0,
+          "slo_pct": 100.0,
+          "escalations": 4,
+          "failovers": 2,
+          "refusals": 0,
+          "errors": 4,
+          "explorations": 3,
+          "unresolved": 1,
+          "tier_counts": {
+            "Haiku 4.5": 59,
+            "Sonnet 5": 7,
+            "Opus 5": 7,
+            "none": 1
+          },
+          "projected_monthly_savings_usd": 375.23,
+          "simulated": true
+        },
+        {
+          "requests": 74,
+          "calls": 78,
+          "calls_per_request": 1.054,
+          "actual_cost_usd": 0.016126,
+          "baseline_cost_usd": 0.042925,
+          "judge_cost_usd": 0.0,
+          "wasted_cost_usd": 0.000755,
+          "total_cost_usd": 0.016126,
+          "savings_pct": 62.43,
+          "savings_pct_with_judge": 62.43,
+          "quality": 0.9143,
+          "graded": 70,
+          "correct": 64,
+          "p50_latency_ms": 421.5,
+          "p95_latency_ms": 2181.3,
+          "slo_latency_ms": 8000.0,
+          "slo_pct": 100.0,
+          "escalations": 1,
+          "failovers": 2,
+          "refusals": 0,
+          "errors": 4,
+          "explorations": 2,
+          "unresolved": 1,
+          "tier_counts": {
+            "Haiku 4.5": 46,
+            "Sonnet 5": 20,
+            "Opus 5": 7,
+            "none": 1
+          },
+          "projected_monthly_savings_usd": 362.15,
+          "simulated": true
+        }
+      ],
+      "policy": [
+        {
+          "bucket": 0,
+          "bucket_label": "0.0-0.2",
+          "start_tier": 0,
+          "start_model": "Haiku 4.5",
+          "tiers": {
+            "Haiku 4.5": {
+              "attempts": 176,
+              "successes": 168,
+              "success_rate": 0.9545
+            },
+            "Sonnet 5": {
+              "attempts": 8,
+              "successes": 4,
+              "success_rate": 0.5
+            },
+            "Opus 5": {
+              "attempts": 0,
+              "successes": 0,
+              "success_rate": null
+            }
+          }
+        },
+        {
+          "bucket": 1,
+          "bucket_label": "0.2-0.4",
+          "start_tier": 1,
+          "start_model": "Sonnet 5",
+          "tiers": {
+            "Haiku 4.5": {
+              "attempts": 49,
+              "successes": 31,
+              "success_rate": 0.6327
+            },
+            "Sonnet 5": {
+              "attempts": 21,
+              "successes": 21,
+              "success_rate": 1.0
+            },
+            "Opus 5": {
+              "attempts": 0,
+              "successes": 0,
+              "success_rate": null
+            }
+          }
+        },
+        {
+          "bucket": 2,
+          "bucket_label": "0.4-0.6",
+          "start_tier": 1,
+          "start_model": "Sonnet 5",
+          "tiers": {
+            "Haiku 4.5": {
+              "attempts": 2,
+              "successes": 2,
+              "success_rate": 1.0
+            },
+            "Sonnet 5": {
+              "attempts": 6,
+              "successes": 6,
+              "success_rate": 1.0
+            },
+            "Opus 5": {
+              "attempts": 0,
+              "successes": 0,
+              "success_rate": null
+            }
+          }
+        },
+        {
+          "bucket": 3,
+          "bucket_label": "0.6-0.8",
+          "start_tier": 1,
+          "start_model": "Sonnet 5",
+          "tiers": {
+            "Haiku 4.5": {
+              "attempts": 1,
+              "successes": 1,
+              "success_rate": 1.0
+            },
+            "Sonnet 5": {
+              "attempts": 7,
+              "successes": 3,
+              "success_rate": 0.4286
+            },
+            "Opus 5": {
+              "attempts": 0,
+              "successes": 0,
+              "success_rate": null
+            }
+          }
+        },
+        {
+          "bucket": 4,
+          "bucket_label": "0.8-1.0",
+          "start_tier": 2,
+          "start_model": "Opus 5",
+          "tiers": {
+            "Haiku 4.5": {
+              "attempts": 0,
+              "successes": 0,
+              "success_rate": null
+            },
+            "Sonnet 5": {
+              "attempts": 5,
+              "successes": 0,
+              "success_rate": 0.0
+            },
+            "Opus 5": {
+              "attempts": 29,
+              "successes": 22,
+              "success_rate": 0.7586
+            }
+          }
+        }
+      ],
+      "adaptations": [
+        {
+          "bucket": 1,
+          "bucket_label": "0.2-0.4",
+          "from": 0,
+          "to": 1,
+          "direction": "up",
+          "why": "tier 1 holds 1.00 against best 1.00 in this bucket, within tolerance 0.05"
+        }
+      ]
+    }
+  },
+  "comparison": {
+    "cost_saving_vs_flagship_pct": 63.7,
+    "quality_router": 0.9143,
+    "quality_flagship": 0.9143,
+    "quality_cheapest": 0.7286,
+    "quality_retained_pct": 100.0,
+    "cheapest_cost_saving_pct": 81.82,
+    "cheapest_quality_retained_pct": 79.69,
+    "latency_p50_change_pct": 80.49,
+    "projected_monthly_savings_usd": 362.15,
+    "router_epochs": 4,
+    "learning_curve": [
+      {
+        "epoch": 1,
+        "savings_pct": 66.45,
+        "quality": 0.8571,
+        "tier_counts": {
+          "Haiku 4.5": 59,
+          "Sonnet 5": 7,
+          "Opus 5": 7,
+          "none": 1
+        }
+      },
+      {
+        "epoch": 2,
+        "savings_pct": 70.1,
+        "quality": 0.8286,
+        "tier_counts": {
+          "Haiku 4.5": 58,
+          "Sonnet 5": 11,
+          "Opus 5": 4,
+          "none": 1
+        }
+      },
+      {
+        "epoch": 3,
+        "savings_pct": 65.88,
+        "quality": 0.8571,
+        "tier_counts": {
+          "Haiku 4.5": 59,
+          "Sonnet 5": 7,
+          "Opus 5": 7,
+          "none": 1
+        }
+      },
+      {
+        "epoch": 4,
+        "savings_pct": 63.7,
+        "quality": 0.9143,
+        "tier_counts": {
+          "Haiku 4.5": 46,
+          "Sonnet 5": 20,
+          "Opus 5": 7,
+          "none": 1
+        }
+      }
+    ]
+  }
+}

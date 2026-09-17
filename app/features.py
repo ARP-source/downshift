@@ -48,6 +48,13 @@ SIMPLE_MARKERS = (
     "abbreviation", "capital of",
 )
 
+# Observed signal mass tops out near 0.6 even for genuinely hard prompts,
+# because a prompt can be hard while triggering only one signal family. This
+# gain stretches that range onto the full 0..1 scale so the upper half is
+# usable for routing. It is the one number to re-tune if the traffic mix
+# changes; it is monotone, so it never reorders two prompts.
+CALIBRATION_GAIN = 1.6
+
 _MATH_OPS = re.compile(r"[+\-*/^%=<>]|\b(sum|product|average|mean|median|percent|sqrt|log|integral|derivative|factorial|modulo)\b")
 _DIGITS = re.compile(r"\d")
 _SENTENCE = re.compile(r"[.!?]+")
@@ -143,7 +150,7 @@ def extract(prompt: str) -> Features:
         score *= 1.0 - discount
 
     return Features(
-        difficulty=_clamp(score),
+        difficulty=_clamp(score * CALIBRATION_GAIN),
         contributions=contributions,
         signals={
             "code": code_hits,
