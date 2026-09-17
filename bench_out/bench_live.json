@@ -1,6 +1,6 @@
 {
   "items": 74,
-  "provider": "anthropic",
+  "provider": "wandb",
   "simulated": false,
   "quality_floor": 0.5,
   "elapsed_s": 556.98,
@@ -514,5 +514,6 @@
         }
       }
     ]
-  }
+  },
+  "provider_label_corrected": "Recorded as 'anthropic' by a hardcoded string in bench.py; the run used the W&B Inference ladder, as the model labels in this report show."
 }

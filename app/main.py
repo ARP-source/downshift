@@ -31,9 +31,25 @@ _router = Router(
 _cascade = Cascade(_provider, _router, SETTINGS)
 _live = Metrics(slo_latency_ms=SETTINGS.slo_latency_ms)
 _feed: list[dict] = []
-_last_report: dict | None = None
+def _load_saved(name: str) -> dict | None:
+    """Rehydrate a previous run so the dashboard opens with real results.
+
+    Demoing should not depend on a live benchmark completing in front of an
+    audience. Saved reports carry their own provider field, so a restored run
+    cannot silently be presented as something it was not.
+    """
+    path = bench.OUT_DIR / f"bench_{name}.json"
+    if not path.exists():
+        return None
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError):
+        return None
+
+
+_last_report: dict | None = _load_saved("live") or _load_saved("latest")
 _last_brownout: dict | None = None
-_last_code: dict | None = None
+_last_code: dict | None = _load_saved("code")
 
 
 class Ask(BaseModel):
