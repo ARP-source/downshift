@@ -11,17 +11,25 @@
  *     aqua slot sits below 3:1 contrast on the light surface
  */
 
+// Arm keys stay as they are on disk; only the display names changed. After the
+// ablation, "router" is the approach we rejected and "naive" is what Downshift
+// ships, so labelling the first one "Router" told the opposite of the finding.
 const ARM_COLOR = {
-  router: "var(--router)",
   flagship: "var(--flagship)",
   cheapest: "var(--cheapest)",
+  router: "var(--routing)",
+  naive: "var(--router)",
 };
 const ARM_LABEL = {
-  router: "Router",
   flagship: "All flagship",
   cheapest: "All cheapest",
+  router: "Difficulty routing",
+  naive: "Downshift",
 };
+// The short-answer benchmark predates the ablation and has three arms; the code
+// benchmark has four. Ordered so no two adjacent bars are hard to tell apart.
 const ARM_ORDER = ["flagship", "router", "cheapest"];
+const CODE_ARM_ORDER = ["flagship", "cheapest", "router", "naive"];
 
 const CHAOS_LABEL = {
   off: "Healthy",
@@ -356,9 +364,11 @@ function renderCodeBench(s) {
   }
   const cmp = c.comparison;
 
+  const codeArms = CODE_ARM_ORDER.filter((a) => c.arms[a]);
+
   barChart(
     $("chart-solve"),
-    ARM_ORDER.map((a) => ({
+    codeArms.map((a) => ({
       name: ARM_LABEL[a],
       color: ARM_COLOR[a],
       value: c.arms[a].solve_rate,
@@ -368,7 +378,7 @@ function renderCodeBench(s) {
 
   barChart(
     $("chart-codecost"),
-    ARM_ORDER.map((a) => ({
+    codeArms.map((a) => ({
       name: ARM_LABEL[a],
       color: ARM_COLOR[a],
       value: c.arms[a].cost_usd,
@@ -392,9 +402,9 @@ function renderCodeBench(s) {
     : "";
 
   $("code-table").innerHTML = `
-    <thead><tr><th>Task</th><th>Level</th><th>Difficulty</th><th>Router used</th>
+    <thead><tr><th>Task</th><th>Level</th><th>Difficulty</th><th>Model used</th>
       <th>Solved</th><th>Cost</th><th>Flagship cost</th></tr></thead>
-    <tbody>${c.arms.router.rows
+    <tbody>${(c.arms.naive || c.arms.router).rows
       .map(
         (r) => `<tr>
         <td>${esc(r.title)}</td>
@@ -409,13 +419,20 @@ function renderCodeBench(s) {
       )
       .join("")}</tbody>`;
 
+  const shipped = c.arms.naive || c.arms.router;
+  const shippedPct = (shipped.solve_rate * 100).toFixed(0);
+  const savedPct = (
+    (1 - shipped.cost_usd / (c.arms.flagship.cost_usd || 1)) *
+    100
+  ).toFixed(0);
   $("code-note").innerHTML = `${c.tasks} tasks, ${c.dataset.total_assertions} assertions,
-    executed not string-matched. Router solved
-    <strong>${(cmp.solve_rate_router * 100).toFixed(0)}%</strong> against flagship
+    executed not string-matched. <strong>Downshift</strong> solved
+    <strong>${shippedPct}%</strong> against the flagship's
     <strong>${(cmp.solve_rate_flagship * 100).toFixed(0)}%</strong>
-    at <strong>${cmp.cost_saving_vs_flagship_pct}% less cost</strong>.
-    The cheapest tier alone solved
-    <strong>${(cmp.solve_rate_cheapest * 100).toFixed(0)}%</strong>.
+    at <strong>${savedPct}% less cost</strong>.
+    Difficulty routing, which we tested and rejected, solved
+    <strong>${(cmp.solve_rate_router * 100).toFixed(0)}%</strong> for
+    ${(c.arms.router.cost_usd / shipped.cost_usd).toFixed(1)}x the price.
     ${c.provider === "mock" ? "Simulated provider." : "Live models."}`;
 }
 

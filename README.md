@@ -22,8 +22,8 @@ No string matching, no partial credit. Four independent runs on live models.
 |---|---|---|---|
 | Always the flagship model | 10-12 / 14 | $0.0204 | 2405 ms |
 | Always the cheapest model | 11-13 / 14 | $0.0006 | 2622 ms |
-| Route by predicted difficulty | 12-13 / 14 | $0.0014 | **1377 ms** |
-| **Verify and escalate, no prediction** | **13-14 / 14** | **$0.0008** | 2824 ms |
+| Difficulty routing (tested, rejected) | 12-13 / 14 | $0.0014 | **1377 ms** |
+| **Downshift** (verify and escalate, no prediction) | **13-14 / 14** | **$0.0008** | 2824 ms |
 
 **96% cheaper than always-flagship, and it solves more, not fewer.**
 
