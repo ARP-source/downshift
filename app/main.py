@@ -8,7 +8,7 @@ from fastapi import FastAPI
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse
 from pydantic import BaseModel
 
-from . import bench, datasets, features, judge, pricing
+from . import bench, codebench, codetasks, datasets, features, judge, pricing
 from .cascade import Cascade
 from .config import SETTINGS
 from .metrics import Metrics
@@ -33,6 +33,7 @@ _live = Metrics(slo_latency_ms=SETTINGS.slo_latency_ms)
 _feed: list[dict] = []
 _last_report: dict | None = None
 _last_brownout: dict | None = None
+_last_code: dict | None = None
 
 
 class Ask(BaseModel):
@@ -53,6 +54,10 @@ class Chaos(BaseModel):
 
 class BrownoutRequest(BaseModel):
     limit: int | None = 30
+
+
+class CodeBenchRequest(BaseModel):
+    limit: int | None = None
 
 
 def _state() -> dict:
@@ -79,6 +84,8 @@ def _state() -> dict:
         "feed": _feed[-40:][::-1],
         "report": _last_report,
         "brownout": _last_brownout,
+        "code": _last_code,
+        "code_tasks": codetasks.summary(),
     }
 
 
@@ -185,6 +192,14 @@ def brownout(body: BrownoutRequest) -> JSONResponse:
     global _last_brownout
     _last_brownout = bench.run_brownout(limit=body.limit or 30, settings=SETTINGS)
     return JSONResponse(_last_brownout)
+
+
+@app.post("/api/codebench")
+def run_codebench(body: CodeBenchRequest) -> JSONResponse:
+    global _last_code
+    _last_code = codebench.run_codebench(limit=body.limit, settings=SETTINGS)
+    codebench.save(_last_code)
+    return JSONResponse(_last_code)
 
 
 @app.get("/api/report")

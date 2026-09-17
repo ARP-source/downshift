@@ -335,6 +335,80 @@ const SCENARIO_LABEL = {
   top_two_down: "Top two down",
 };
 
+function renderCodeBench(s) {
+  const c = s.code;
+  if (!c) {
+    $("chart-solve").innerHTML = '<p class="empty">Not run yet.</p>';
+    $("chart-codecost").innerHTML = '<p class="empty">Not run yet.</p>';
+    $("code-table").innerHTML = "";
+    $("code-align").innerHTML = "";
+    return;
+  }
+  const cmp = c.comparison;
+
+  barChart(
+    $("chart-solve"),
+    ARM_ORDER.map((a) => ({
+      name: ARM_LABEL[a],
+      color: ARM_COLOR[a],
+      value: c.arms[a].solve_rate,
+    })),
+    (v) => (v * 100).toFixed(0) + "%"
+  );
+
+  barChart(
+    $("chart-codecost"),
+    ARM_ORDER.map((a) => ({
+      name: ARM_LABEL[a],
+      color: ARM_COLOR[a],
+      value: c.arms[a].cost_usd,
+    })),
+    usd
+  );
+
+  // Our difficulty score against the task levels we did not assign. If these
+  // do not rise together, the score is not measuring difficulty.
+  const align = cmp.mean_difficulty_by_level || {};
+  const order = ["easy", "medium", "hard"].filter((l) => l in align);
+  $("code-align").innerHTML = order.length
+    ? `<p class="note" style="margin-top:4px">Our difficulty score against the task levels,
+        which were assigned independently of it:
+        ${order.map((l) => `<strong>${l}</strong> ${align[l].toFixed(3)}`).join(" &middot; ")}.
+        ${
+          order.length === 3 && align.easy < align.medium && align.medium < align.hard
+            ? "The score rises with the external label, so it is tracking something real."
+            : "These do not rise cleanly with the external label, which is a limit of the lexical scorer."
+        }</p>`
+    : "";
+
+  $("code-table").innerHTML = `
+    <thead><tr><th>Task</th><th>Level</th><th>Difficulty</th><th>Router used</th>
+      <th>Solved</th><th>Cost</th><th>Flagship cost</th></tr></thead>
+    <tbody>${c.arms.router.rows
+      .map(
+        (r) => `<tr>
+        <td>${esc(r.title)}</td>
+        <td>${esc(r.level)}</td>
+        <td>${r.difficulty.toFixed(3)}</td>
+        <td>${esc(r.label || "—")}</td>
+        <td style="color:${r.solved ? "var(--good)" : "var(--bad)"}">${
+          r.solved ? "yes" : `${r.passed}/${r.total}`
+        }</td>
+        <td>${usd(r.cost_usd)}</td>
+        <td>${usd(r.baseline_cost_usd)}</td></tr>`
+      )
+      .join("")}</tbody>`;
+
+  $("code-note").innerHTML = `${c.tasks} tasks, ${c.dataset.total_assertions} assertions,
+    executed not string-matched. Router solved
+    <strong>${(cmp.solve_rate_router * 100).toFixed(0)}%</strong> against flagship
+    <strong>${(cmp.solve_rate_flagship * 100).toFixed(0)}%</strong>
+    at <strong>${cmp.cost_saving_vs_flagship_pct}% less cost</strong>.
+    The cheapest tier alone solved
+    <strong>${(cmp.solve_rate_cheapest * 100).toFixed(0)}%</strong>.
+    ${c.provider === "mock" ? "Simulated provider." : "Live models."}`;
+}
+
 function renderBrownout(s) {
   const b = s.brownout;
   if (!b) {
@@ -436,6 +510,7 @@ function render(s) {
   renderLadder(s);
   renderKPIs(s);
   renderBench(s);
+  renderCodeBench(s);
   renderBrownout(s);
   renderPolicy(s);
   renderFeed(s);
@@ -536,6 +611,23 @@ $("compare-btn").addEventListener("click", async () => {
   } finally {
     btn.disabled = false;
     btn.textContent = "Compare all tiers";
+  }
+});
+
+$("run-code").addEventListener("click", async (e) => {
+  const btn = e.currentTarget;
+  btn.disabled = true;
+  btn.textContent = "Writing and running code…";
+  try {
+    await fetch("/api/codebench", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({}),
+    });
+    await refresh();
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "Run code benchmark";
   }
 });
 
