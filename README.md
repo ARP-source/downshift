@@ -33,6 +33,20 @@ Against always-flagship: **93.1% cheaper, 108% of its solve rate.**
 Against cheap-only: **double the hard-task solve rate**, for twice the cheap
 tier's cost and still 93% below flagship.
 
+### It reproduces
+
+The benchmark was run twice against live models. Exploration is randomised, so
+the router does not take an identical path through the ladder each time.
+
+| Arm | Hard tasks, run 1 | Hard tasks, run 2 | Solved, run 1 | Solved, run 2 |
+|---|---|---|---|---|
+| All flagship | 2/4 | 2/4 | 12/14 | 11/14 |
+| All cheapest | 2/4 | 2/4 | 12/14 | 12/14 |
+| **Router** | **4/4** | **4/4** | **13/14** | **13/14** |
+
+Cost saving against flagship: 93.1% then 93.3%. The hard-task column, which is
+the claim that carries the product, came out identical both times.
+
 ## The result that did not work, and why it is here
 
 The same three arms over 74 short factual questions:
@@ -148,7 +162,8 @@ python -c "from app import codebench; r=codebench.run_codebench(); codebench.sav
 - **Non-starting tiers carry selection-biased statistics**, sampled either by random
   exploration or by escalation after a cheaper tier already failed.
 - **Fourteen code tasks and 74 questions is a small sample.** The hard-task column
-  that carries the argument rests on four problems.
+  that carries the argument rests on four problems. It was run twice and came out
+  4/4 against 2/4 both times, which is reassuring but is still four problems.
 
 ## Prior art
 

@@ -38,6 +38,20 @@ So does the flagship. The router gets 4 of 4, because a failed quality gate
 triggers escalation instead of shipping a wrong answer. Cheap-only looks fine in
 aggregate and loses half your hard work without telling you.
 
+### It reproduces
+
+The benchmark was run twice against live models. Exploration is randomised, so
+the router does not take an identical path through the ladder each time.
+
+| Arm | Hard tasks, run 1 | Hard tasks, run 2 | Solved, run 1 | Solved, run 2 |
+|---|---|---|---|---|
+| All flagship | 2/4 | 2/4 | 12/14 | 11/14 |
+| All cheapest | 2/4 | 2/4 | 12/14 | 12/14 |
+| **Router** | **4/4** | **4/4** | **13/14** | **13/14** |
+
+Cost saving against flagship: 93.1% then 93.3%. The hard-task column, which is
+the claim that carries the product, came out identical both times.
+
 ## The result we did not want, reported anyway
 
 The same three arms over 74 short factual questions:
@@ -110,7 +124,8 @@ error. A router without a quality gate serves that to a user.
   questions (656 ms vs 494 ms) and faster on code (1921 ms vs 2463 ms). We do
   not claim latency as a general win.
 - **Small sample.** Fourteen code tasks; the hard-task column carrying the
-  argument rests on four problems.
+  argument rests on four problems. Two independent runs both gave 4/4 against
+  2/4, which is reassuring but is still four problems.
 
 ---
 
@@ -152,6 +167,10 @@ layer, with a control arm and execution grading, portable to your traffic.
 **"Your trivia result says routing is pointless."** On that workload it is, and
 we say so in the README. That is the finding: routing pays on difficulty, not
 volume. The code benchmark is where the cheap model actually fails.
+
+**"Did that reproduce?"** Yes. Two runs, randomised exploration, hard tasks
+4/4 both times against 2/4 for both baselines. Run 2 was the stronger one:
+the flagship dropped to 11/14 while the router held 13/14.
 
 **"You gave your router more attempts."** True, and it is in the limitations.
 Escalation with verification is the product, not a scoring trick -- but a
