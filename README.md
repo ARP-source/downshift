@@ -159,7 +159,12 @@ and says so in place of every headline, so nothing simulated is ever presented a
 measured.
 
 ```bash
+# Works offline against the mock provider.
 python -c "from app import bench; r=bench.run_benchmark(); bench.save(r); print(r['comparison'])"
+
+# Needs a real key: it grades by executing generated code, and the mock
+# provider returns a placeholder string rather than Python. Without a key it
+# returns an explanation instead of a row of zeros.
 python -c "from app import codebench; r=codebench.run_codebench(); codebench.save(r); print(r['comparison'])"
 ```
 

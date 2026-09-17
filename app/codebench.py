@@ -192,6 +192,27 @@ def _run_arm(name: str, tasks: list, settings: Settings) -> dict:
 
 def run_codebench(limit: int | None = None, settings: Settings = SETTINGS) -> dict:
     tasks = codetasks.load(limit)
+
+    # The mock provider returns a placeholder string, not Python, so every arm
+    # scores 0/14 and the benchmark looks broken rather than unavailable. We
+    # will not have the mock emit working code to paper over this: it would be
+    # a simulation presenting itself as a measurement, which is the one thing
+    # this project exists to argue against.
+    if settings.mock:
+        return {
+            "tasks": len(tasks),
+            "provider": "mock",
+            "unavailable": (
+                "This benchmark grades by executing generated code, so it needs a real "
+                "model. The offline mock provider returns a placeholder string, which "
+                "cannot compile. Set an API key in .env and run again."
+            ),
+            "elapsed_s": 0.0,
+            "dataset": codetasks.summary(),
+            "arms": {},
+            "comparison": {},
+        }
+
     started = time.time()
     arms = {name: _run_arm(name, tasks, settings) for name in ARMS}
 

@@ -355,6 +355,14 @@ const SCENARIO_LABEL = {
 
 function renderCodeBench(s) {
   const c = s.code;
+  if (c && c.unavailable) {
+    $("code-note").textContent = c.unavailable;
+    $("chart-solve").innerHTML = '<p class="empty">Needs a live model.</p>';
+    $("chart-codecost").innerHTML = '<p class="empty">Needs a live model.</p>';
+    $("code-table").innerHTML = "";
+    $("code-align").innerHTML = "";
+    return;
+  }
   if (!c) {
     $("chart-solve").innerHTML = '<p class="empty">Not run yet.</p>';
     $("chart-codecost").innerHTML = '<p class="empty">Not run yet.</p>';
