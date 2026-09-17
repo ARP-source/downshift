@@ -106,6 +106,7 @@ class Cascade:
         kind: str = "exact",
         key: str = "",
         force_model: str | None = None,
+        start_at: int | None = None,
     ) -> CascadeResult:
         feats = features.extract(prompt)
 
@@ -114,6 +115,14 @@ class Cascade:
             # how the benchmark measures what a naive deployment would pay.
             start_tier = pricing.tier_of(force_model)
             bucket, reason, explored = -1, f"pinned to {force_model}", False
+        elif start_at is not None:
+            # Ablation: no difficulty scoring at all. Always begin at this tier
+            # and escalate on a failed gate exactly as the router does. This
+            # isolates how much of the router's advantage comes from the
+            # classifier rather than from verify-and-escalate.
+            start_tier = start_at
+            bucket, explored = -1, False
+            reason = f"no routing: always start at tier {start_at}, escalate on failure"
         else:
             decision = self._router.choose(feats, key=key or prompt)
             start_tier, bucket = decision.tier, decision.bucket
@@ -128,6 +137,7 @@ class Cascade:
         )
 
         meta = {"difficulty": feats.difficulty, "answer": expected}
+        # Pinned arms cannot climb; routed and ablation arms can.
         max_tier = start_tier if force_model is not None else pricing.MAX_TIER
         tier = start_tier
         succeeded = False

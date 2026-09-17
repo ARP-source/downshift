@@ -29,7 +29,10 @@ from .metrics import Metrics
 from .providers import build_provider
 from .router import Router
 
-ARMS = ("flagship", "cheapest", "router")
+# "naive" is the ablation: escalation and verification with the difficulty
+# scorer removed entirely. If the router cannot beat it, the classifier is
+# not what is producing the result and we should say so.
+ARMS = ("flagship", "cheapest", "router", "naive")
 EXEC_TIMEOUT_S = 8
 
 _FENCE = re.compile(r"```(?:python)?\s*(.*?)```", re.DOTALL)
@@ -123,7 +126,13 @@ def _run_arm(name: str, tasks: list, settings: Settings) -> dict:
     )
     cascade = Cascade(provider, router, settings)
     meter = Metrics(slo_latency_ms=settings.slo_latency_ms)
-    forced = {"flagship": pricing.FLAGSHIP, "cheapest": pricing.LADDER[0], "router": None}[name]
+    forced = {
+        "flagship": pricing.FLAGSHIP,
+        "cheapest": pricing.LADDER[0],
+        "router": None,
+        "naive": None,
+    }[name]
+    start_at = 0 if name == "naive" else None
 
     rows = []
     solved = 0
@@ -134,6 +143,7 @@ def _run_arm(name: str, tasks: list, settings: Settings) -> dict:
             kind="open",
             key=task.id,
             force_model=forced,
+            start_at=start_at,
         )
         meter.record(result)
         graded = run_tests(extract_code(result.answer), task.func, task.tests)
@@ -186,6 +196,7 @@ def run_codebench(limit: int | None = None, settings: Settings = SETTINGS) -> di
     arms = {name: _run_arm(name, tasks, settings) for name in ARMS}
 
     flagship, cheapest, router = arms["flagship"], arms["cheapest"], arms["router"]
+    naive = arms["naive"]
 
     def drop(new: float, old: float) -> float:
         return 0.0 if not old else (old - new) / old * 100.0
@@ -222,6 +233,14 @@ def run_codebench(limit: int | None = None, settings: Settings = SETTINGS) -> di
                 else round(cheapest["solve_rate"] / flagship["solve_rate"] * 100.0, 1)
             ),
             "mean_difficulty_by_level": alignment,
+            # The question the ablation answers: does difficulty scoring add
+            # anything over plain verify-and-escalate?
+            "solve_rate_naive": naive["solve_rate"],
+            "naive_cost_usd": naive["cost_usd"],
+            "router_vs_naive_solve_delta": round(
+                router["solve_rate"] - naive["solve_rate"], 4
+            ),
+            "router_vs_naive_cost_pct": round(drop(router["cost_usd"], naive["cost_usd"]), 2),
         },
     }
 
