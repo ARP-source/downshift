@@ -12,6 +12,7 @@ Two implementations:
 from __future__ import annotations
 
 import hashlib
+import os
 import time
 from dataclasses import dataclass
 from typing import Protocol
@@ -355,11 +356,108 @@ class MockProvider:
         )
 
 
+class OpenAICompatibleProvider:
+    """Live inference against an OpenAI-compatible endpoint.
+
+    Used for the W&B Inference ladder. The Anthropic SDK cannot talk to it, so
+    this is a separate client rather than a base_url override -- the wire
+    formats differ, not just the host.
+    """
+
+    name = "openai-compatible"
+
+    DEFAULT_BASE_URL = "https://api.inference.wandb.ai/v1"
+
+    def __init__(self, settings: Settings) -> None:
+        import openai
+
+        self._sdk = openai
+        key = os.getenv("INFERENCE_API_KEY") or os.getenv("WANDB_API_KEY")
+        if not key:
+            raise RuntimeError("no INFERENCE_API_KEY or WANDB_API_KEY in the environment")
+        headers = {}
+        # W&B routes usage to a project when one is supplied.
+        project = os.getenv("WANDB_PROJECT")
+        if project:
+            headers["OpenAI-Project"] = project
+        self._client = openai.OpenAI(
+            base_url=os.getenv("INFERENCE_BASE_URL", self.DEFAULT_BASE_URL),
+            api_key=key,
+            timeout=settings.timeout_s,
+            max_retries=1,
+            default_headers=headers or None,
+        )
+        self._settings = settings
+        self.degraded: list[str] = []
+
+    def _fail(self, model: str, t0: float, kind: str, exc: Exception) -> Completion:
+        return Completion(
+            model=model,
+            ok=False,
+            error=f"{type(exc).__name__}: {exc}"[:300],
+            error_kind=kind,
+            latency_ms=(time.perf_counter() - t0) * 1000.0,
+        )
+
+    def complete(
+        self, model: str, prompt: str, *, max_tokens: int, meta: dict | None = None
+    ) -> Completion:
+        t0 = time.perf_counter()
+        try:
+            resp = self._client.chat.completions.create(
+                model=model,
+                max_tokens=max_tokens,
+                messages=[
+                    {"role": "system", "content": SYSTEM_PROMPT},
+                    {"role": "user", "content": prompt},
+                ],
+            )
+        # Most specific first, same ordering rule as the Anthropic client.
+        except self._sdk.NotFoundError as exc:
+            return self._fail(model, t0, "not_found", exc)
+        except self._sdk.RateLimitError as exc:
+            return self._fail(model, t0, "rate_limit", exc)
+        except self._sdk.APITimeoutError as exc:
+            return self._fail(model, t0, "timeout", exc)
+        except self._sdk.APIStatusError as exc:
+            status = getattr(exc, "status_code", 0) or 0
+            return self._fail(model, t0, "server" if status >= 500 else "api", exc)
+        except self._sdk.APIConnectionError as exc:
+            return self._fail(model, t0, "transport", exc)
+
+        latency = (time.perf_counter() - t0) * 1000.0
+        usage = getattr(resp, "usage", None)
+        in_tok = int(getattr(usage, "prompt_tokens", 0) or 0)
+        out_tok = int(getattr(usage, "completion_tokens", 0) or 0)
+        choices = getattr(resp, "choices", None) or []
+        text = ""
+        finish = None
+        if choices:
+            finish = getattr(choices[0], "finish_reason", None)
+            text = (getattr(getattr(choices[0], "message", None), "content", "") or "").strip()
+
+        return Completion(
+            model=model,
+            text=text,
+            input_tokens=in_tok,
+            output_tokens=out_tok,
+            latency_ms=latency,
+            ok=bool(text),
+            error=None if text else "empty response",
+            error_kind=None if text else "empty",
+            stop_reason=finish,
+        )
+
+
 def build_provider(settings: Settings) -> Provider:
     """Pick a provider. Falls back to mock rather than failing to start."""
     if settings.mock:
         return MockProvider(settings)
     try:
+        # The ladder decides the wire protocol: Claude tiers speak the Anthropic
+        # API, the W&B tiers speak an OpenAI-compatible one.
+        if pricing.LADDER_NAME == "wandb":
+            return OpenAICompatibleProvider(settings)
         return AnthropicProvider(settings)
     except Exception as exc:
         # Missing package, missing credentials, bad client config -- none of

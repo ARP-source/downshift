@@ -6,6 +6,7 @@ kept in exactly one place and every cost number in the app derives from it.
 """
 from __future__ import annotations
 
+import os
 from dataclasses import dataclass
 
 
@@ -25,7 +26,7 @@ class ModelSpec:
 
 
 # Ordered cheap -> expensive. Tier index is the routing ladder position.
-MODELS: dict[str, ModelSpec] = {
+CLAUDE_MODELS: dict[str, ModelSpec] = {
     "claude-haiku-4-5": ModelSpec(
         model_id="claude-haiku-4-5",
         label="Haiku 4.5",
@@ -58,14 +59,64 @@ MODELS: dict[str, ModelSpec] = {
     ),
 }
 
-# The escalation ladder, cheapest first.
-LADDER: list[str] = ["claude-haiku-4-5", "claude-sonnet-5", "claude-opus-5"]
+# Second ladder: open models served through the W&B Inference endpoint, which
+# is OpenAI-compatible rather than Anthropic-compatible. Prices are W&B list
+# rates per million tokens. The spread here is far wider than the Claude
+# ladder -- roughly 33x cheapest to flagship against 5x -- which makes the
+# routing decision matter more, not less.
+WANDB_MODELS: dict[str, ModelSpec] = {
+    "openai/gpt-oss-20b": ModelSpec(
+        model_id="openai/gpt-oss-20b",
+        label="GPT-OSS 20B",
+        tier=0,
+        input_per_mtok=0.03,
+        output_per_mtok=0.13,
+        context=131_000,
+        supports_effort=False,
+        supports_server_fallback=False,
+    ),
+    "Qwen/Qwen3.6-35B-A3B": ModelSpec(
+        model_id="Qwen/Qwen3.6-35B-A3B",
+        label="Qwen3.6 35B",
+        tier=1,
+        input_per_mtok=0.25,
+        output_per_mtok=1.25,
+        context=262_000,
+        supports_effort=False,
+        supports_server_fallback=False,
+    ),
+    "deepseek-ai/DeepSeek-V4-Pro-0813": ModelSpec(
+        model_id="deepseek-ai/DeepSeek-V4-Pro-0813",
+        label="DeepSeek V4-Pro",
+        tier=2,
+        input_per_mtok=1.31,
+        output_per_mtok=3.96,
+        context=1_049_000,
+        supports_effort=False,
+        supports_server_fallback=False,
+    ),
+}
 
-# What a naive "just use the best model" deployment would pay.
-FLAGSHIP: str = "claude-opus-5"
+_LADDERS = {
+    "claude": (
+        CLAUDE_MODELS,
+        ["claude-haiku-4-5", "claude-sonnet-5", "claude-opus-5"],
+        "claude-opus-5",
+        "claude-haiku-4-5",
+    ),
+    "wandb": (
+        WANDB_MODELS,
+        ["openai/gpt-oss-20b", "Qwen/Qwen3.6-35B-A3B", "deepseek-ai/DeepSeek-V4-Pro-0813"],
+        "deepseek-ai/DeepSeek-V4-Pro-0813",
+        "openai/gpt-oss-20b",
+    ),
+}
 
-# Cheap model used for LLM-as-judge grading of open-ended items.
-JUDGE_MODEL: str = "claude-haiku-4-5"
+LADDER_NAME: str = os.getenv("LADDER", "claude").strip().lower()
+if LADDER_NAME not in _LADDERS:
+    LADDER_NAME = "claude"
+
+MODELS, LADDER, FLAGSHIP, JUDGE_MODEL = _LADDERS[LADDER_NAME]
 
 MAX_TIER: int = len(LADDER) - 1
 

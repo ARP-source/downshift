@@ -3,7 +3,7 @@
   "provider": "mock",
   "simulated": true,
   "quality_floor": 0.5,
-  "elapsed_s": 12.38,
+  "elapsed_s": 11.7,
   "dataset": {
     "total": 74,
     "checkable": 70,
@@ -34,31 +34,31 @@
       "arm": "flagship",
       "metrics": {
         "requests": 74,
-        "calls": 78,
-        "calls_per_request": 1.054,
-        "actual_cost_usd": 0.044425,
-        "baseline_cost_usd": 0.044425,
+        "calls": 74,
+        "calls_per_request": 1.0,
+        "actual_cost_usd": 0.010065,
+        "baseline_cost_usd": 0.010065,
         "judge_cost_usd": 0.0,
-        "wasted_cost_usd": 0.000755,
-        "total_cost_usd": 0.044425,
+        "wasted_cost_usd": 0.000516,
+        "total_cost_usd": 0.010065,
         "savings_pct": 0.0,
         "savings_pct_with_judge": 0.0,
-        "quality": 0.9143,
+        "quality": 0.9429,
         "graded": 70,
-        "correct": 64,
-        "p50_latency_ms": 2160.1,
-        "p95_latency_ms": 2674.0,
+        "correct": 66,
+        "p50_latency_ms": 2092.6,
+        "p95_latency_ms": 2676.6,
         "slo_latency_ms": 8000.0,
         "slo_pct": 100.0,
-        "escalations": 1,
-        "failovers": 4,
+        "escalations": 3,
+        "failovers": 0,
         "refusals": 0,
-        "errors": 8,
+        "errors": 0,
         "explorations": 0,
-        "unresolved": 5,
+        "unresolved": 3,
         "tier_counts": {
-          "Opus 5": 69,
-          "none": 5
+          "DeepSeek V4-Pro": 71,
+          "none": 3
         },
         "projected_monthly_savings_usd": 0.0,
         "simulated": true
@@ -66,31 +66,31 @@
       "epochs": [
         {
           "requests": 74,
-          "calls": 78,
-          "calls_per_request": 1.054,
-          "actual_cost_usd": 0.044425,
-          "baseline_cost_usd": 0.044425,
+          "calls": 74,
+          "calls_per_request": 1.0,
+          "actual_cost_usd": 0.010065,
+          "baseline_cost_usd": 0.010065,
           "judge_cost_usd": 0.0,
-          "wasted_cost_usd": 0.000755,
-          "total_cost_usd": 0.044425,
+          "wasted_cost_usd": 0.000516,
+          "total_cost_usd": 0.010065,
           "savings_pct": 0.0,
           "savings_pct_with_judge": 0.0,
-          "quality": 0.9143,
+          "quality": 0.9429,
           "graded": 70,
-          "correct": 64,
-          "p50_latency_ms": 2160.1,
-          "p95_latency_ms": 2674.0,
+          "correct": 66,
+          "p50_latency_ms": 2092.6,
+          "p95_latency_ms": 2676.6,
           "slo_latency_ms": 8000.0,
           "slo_pct": 100.0,
-          "escalations": 1,
-          "failovers": 4,
+          "escalations": 3,
+          "failovers": 0,
           "refusals": 0,
-          "errors": 8,
+          "errors": 0,
           "explorations": 0,
-          "unresolved": 5,
+          "unresolved": 3,
           "tier_counts": {
-            "Opus 5": 69,
-            "none": 5
+            "DeepSeek V4-Pro": 71,
+            "none": 3
           },
           "projected_monthly_savings_usd": 0.0,
           "simulated": true
@@ -103,65 +103,65 @@
       "arm": "cheapest",
       "metrics": {
         "requests": 74,
-        "calls": 76,
-        "calls_per_request": 1.027,
-        "actual_cost_usd": 0.008078,
-        "baseline_cost_usd": 0.04039,
+        "calls": 75,
+        "calls_per_request": 1.014,
+        "actual_cost_usd": 0.000233,
+        "baseline_cost_usd": 0.009134,
         "judge_cost_usd": 0.0,
-        "wasted_cost_usd": 0.00093,
-        "total_cost_usd": 0.008078,
-        "savings_pct": 80.0,
-        "savings_pct_with_judge": 80.0,
-        "quality": 0.7286,
+        "wasted_cost_usd": 3.2e-05,
+        "total_cost_usd": 0.000233,
+        "savings_pct": 97.45,
+        "savings_pct_with_judge": 97.45,
+        "quality": 0.7429,
         "graded": 70,
-        "correct": 51,
-        "p50_latency_ms": 362.0,
-        "p95_latency_ms": 449.8,
+        "correct": 52,
+        "p50_latency_ms": 356.5,
+        "p95_latency_ms": 442.9,
         "slo_latency_ms": 8000.0,
         "slo_pct": 100.0,
-        "escalations": 7,
-        "failovers": 2,
+        "escalations": 9,
+        "failovers": 1,
         "refusals": 0,
-        "errors": 4,
+        "errors": 2,
         "explorations": 0,
-        "unresolved": 9,
+        "unresolved": 10,
         "tier_counts": {
-          "Haiku 4.5": 65,
-          "none": 9
+          "GPT-OSS 20B": 64,
+          "none": 10
         },
-        "projected_monthly_savings_usd": 436.65,
+        "projected_monthly_savings_usd": 120.29,
         "simulated": true
       },
       "epochs": [
         {
           "requests": 74,
-          "calls": 76,
-          "calls_per_request": 1.027,
-          "actual_cost_usd": 0.008078,
-          "baseline_cost_usd": 0.04039,
+          "calls": 75,
+          "calls_per_request": 1.014,
+          "actual_cost_usd": 0.000233,
+          "baseline_cost_usd": 0.009134,
           "judge_cost_usd": 0.0,
-          "wasted_cost_usd": 0.00093,
-          "total_cost_usd": 0.008078,
-          "savings_pct": 80.0,
-          "savings_pct_with_judge": 80.0,
-          "quality": 0.7286,
+          "wasted_cost_usd": 3.2e-05,
+          "total_cost_usd": 0.000233,
+          "savings_pct": 97.45,
+          "savings_pct_with_judge": 97.45,
+          "quality": 0.7429,
           "graded": 70,
-          "correct": 51,
-          "p50_latency_ms": 362.0,
-          "p95_latency_ms": 449.8,
+          "correct": 52,
+          "p50_latency_ms": 356.5,
+          "p95_latency_ms": 442.9,
           "slo_latency_ms": 8000.0,
           "slo_pct": 100.0,
-          "escalations": 7,
-          "failovers": 2,
+          "escalations": 9,
+          "failovers": 1,
           "refusals": 0,
-          "errors": 4,
+          "errors": 2,
           "explorations": 0,
-          "unresolved": 9,
+          "unresolved": 10,
           "tier_counts": {
-            "Haiku 4.5": 65,
-            "none": 9
+            "GPT-OSS 20B": 64,
+            "none": 10
           },
-          "projected_monthly_savings_usd": 436.65,
+          "projected_monthly_savings_usd": 120.29,
           "simulated": true
         }
       ],
@@ -172,35 +172,35 @@
       "arm": "router",
       "metrics": {
         "requests": 74,
-        "calls": 78,
-        "calls_per_request": 1.054,
-        "actual_cost_usd": 0.016126,
-        "baseline_cost_usd": 0.042925,
+        "calls": 79,
+        "calls_per_request": 1.068,
+        "actual_cost_usd": 0.001898,
+        "baseline_cost_usd": 0.009464,
         "judge_cost_usd": 0.0,
-        "wasted_cost_usd": 0.000755,
-        "total_cost_usd": 0.016126,
-        "savings_pct": 62.43,
-        "savings_pct_with_judge": 62.43,
-        "quality": 0.9143,
+        "wasted_cost_usd": 0.000524,
+        "total_cost_usd": 0.001898,
+        "savings_pct": 79.95,
+        "savings_pct_with_judge": 79.95,
+        "quality": 0.8571,
         "graded": 70,
-        "correct": 64,
-        "p50_latency_ms": 421.5,
-        "p95_latency_ms": 2181.3,
+        "correct": 60,
+        "p50_latency_ms": 382.2,
+        "p95_latency_ms": 2194.1,
         "slo_latency_ms": 8000.0,
         "slo_pct": 100.0,
-        "escalations": 1,
-        "failovers": 2,
+        "escalations": 6,
+        "failovers": 1,
         "refusals": 0,
-        "errors": 4,
-        "explorations": 2,
-        "unresolved": 1,
+        "errors": 2,
+        "explorations": 0,
+        "unresolved": 3,
         "tier_counts": {
-          "Haiku 4.5": 46,
-          "Sonnet 5": 20,
-          "Opus 5": 7,
-          "none": 1
+          "GPT-OSS 20B": 58,
+          "Qwen3.6 35B": 8,
+          "none": 3,
+          "DeepSeek V4-Pro": 5
         },
-        "projected_monthly_savings_usd": 362.15,
+        "projected_monthly_savings_usd": 102.24,
         "simulated": true
       },
       "epochs": [
@@ -208,132 +208,132 @@
           "requests": 74,
           "calls": 81,
           "calls_per_request": 1.095,
-          "actual_cost_usd": 0.014903,
-          "baseline_cost_usd": 0.0426,
+          "actual_cost_usd": 0.001936,
+          "baseline_cost_usd": 0.009464,
           "judge_cost_usd": 0.0,
-          "wasted_cost_usd": 0.001246,
-          "total_cost_usd": 0.014903,
-          "savings_pct": 65.02,
-          "savings_pct_with_judge": 65.02,
+          "wasted_cost_usd": 0.000562,
+          "total_cost_usd": 0.001936,
+          "savings_pct": 79.55,
+          "savings_pct_with_judge": 79.55,
           "quality": 0.8571,
           "graded": 70,
           "correct": 60,
-          "p50_latency_ms": 379.5,
-          "p95_latency_ms": 2191.8,
+          "p50_latency_ms": 382.2,
+          "p95_latency_ms": 2194.1,
           "slo_latency_ms": 8000.0,
           "slo_pct": 100.0,
-          "escalations": 4,
-          "failovers": 2,
+          "escalations": 8,
+          "failovers": 1,
           "refusals": 0,
-          "errors": 4,
+          "errors": 2,
           "explorations": 2,
-          "unresolved": 1,
+          "unresolved": 3,
           "tier_counts": {
-            "Haiku 4.5": 59,
-            "Sonnet 5": 7,
-            "Opus 5": 7,
-            "none": 1
+            "GPT-OSS 20B": 58,
+            "Qwen3.6 35B": 8,
+            "none": 3,
+            "DeepSeek V4-Pro": 5
           },
-          "projected_monthly_savings_usd": 374.28,
+          "projected_monthly_savings_usd": 101.73,
           "simulated": true
         },
         {
           "requests": 74,
-          "calls": 80,
-          "calls_per_request": 1.081,
-          "actual_cost_usd": 0.013283,
-          "baseline_cost_usd": 0.042525,
+          "calls": 79,
+          "calls_per_request": 1.068,
+          "actual_cost_usd": 0.001461,
+          "baseline_cost_usd": 0.009452,
           "judge_cost_usd": 0.0,
-          "wasted_cost_usd": 0.000964,
-          "total_cost_usd": 0.013283,
-          "savings_pct": 68.76,
-          "savings_pct_with_judge": 68.76,
-          "quality": 0.8286,
+          "wasted_cost_usd": 0.000524,
+          "total_cost_usd": 0.001461,
+          "savings_pct": 84.54,
+          "savings_pct_with_judge": 84.54,
+          "quality": 0.8571,
           "graded": 70,
-          "correct": 58,
-          "p50_latency_ms": 379.5,
-          "p95_latency_ms": 1790.4,
+          "correct": 60,
+          "p50_latency_ms": 382.2,
+          "p95_latency_ms": 1786.9,
           "slo_latency_ms": 8000.0,
           "slo_pct": 100.0,
-          "escalations": 3,
-          "failovers": 2,
+          "escalations": 6,
+          "failovers": 1,
           "refusals": 0,
-          "errors": 4,
+          "errors": 2,
           "explorations": 3,
-          "unresolved": 1,
+          "unresolved": 3,
           "tier_counts": {
-            "Haiku 4.5": 58,
-            "Sonnet 5": 11,
-            "Opus 5": 4,
-            "none": 1
+            "GPT-OSS 20B": 58,
+            "Qwen3.6 35B": 11,
+            "none": 3,
+            "DeepSeek V4-Pro": 2
           },
-          "projected_monthly_savings_usd": 395.16,
+          "projected_monthly_savings_usd": 107.98,
           "simulated": true
         },
         {
           "requests": 74,
           "calls": 81,
           "calls_per_request": 1.095,
-          "actual_cost_usd": 0.015158,
-          "baseline_cost_usd": 0.042925,
+          "actual_cost_usd": 0.001901,
+          "baseline_cost_usd": 0.009464,
           "judge_cost_usd": 0.0,
-          "wasted_cost_usd": 0.001264,
-          "total_cost_usd": 0.015158,
-          "savings_pct": 64.69,
-          "savings_pct_with_judge": 64.69,
+          "wasted_cost_usd": 0.000564,
+          "total_cost_usd": 0.001901,
+          "savings_pct": 79.92,
+          "savings_pct_with_judge": 79.92,
           "quality": 0.8571,
           "graded": 70,
           "correct": 60,
-          "p50_latency_ms": 376.5,
-          "p95_latency_ms": 2191.8,
+          "p50_latency_ms": 382.2,
+          "p95_latency_ms": 2309.8,
           "slo_latency_ms": 8000.0,
           "slo_pct": 100.0,
-          "escalations": 4,
-          "failovers": 2,
+          "escalations": 8,
+          "failovers": 1,
           "refusals": 0,
-          "errors": 4,
+          "errors": 2,
           "explorations": 3,
-          "unresolved": 1,
+          "unresolved": 3,
           "tier_counts": {
-            "Haiku 4.5": 59,
-            "Sonnet 5": 7,
-            "Opus 5": 7,
-            "none": 1
+            "GPT-OSS 20B": 59,
+            "Qwen3.6 35B": 7,
+            "none": 3,
+            "DeepSeek V4-Pro": 5
           },
-          "projected_monthly_savings_usd": 375.23,
+          "projected_monthly_savings_usd": 102.2,
           "simulated": true
         },
         {
           "requests": 74,
-          "calls": 78,
-          "calls_per_request": 1.054,
-          "actual_cost_usd": 0.016126,
-          "baseline_cost_usd": 0.042925,
+          "calls": 79,
+          "calls_per_request": 1.068,
+          "actual_cost_usd": 0.001898,
+          "baseline_cost_usd": 0.009464,
           "judge_cost_usd": 0.0,
-          "wasted_cost_usd": 0.000755,
-          "total_cost_usd": 0.016126,
-          "savings_pct": 62.43,
-          "savings_pct_with_judge": 62.43,
-          "quality": 0.9143,
+          "wasted_cost_usd": 0.000524,
+          "total_cost_usd": 0.001898,
+          "savings_pct": 79.95,
+          "savings_pct_with_judge": 79.95,
+          "quality": 0.8571,
           "graded": 70,
-          "correct": 64,
-          "p50_latency_ms": 421.5,
-          "p95_latency_ms": 2181.3,
+          "correct": 60,
+          "p50_latency_ms": 382.2,
+          "p95_latency_ms": 2194.1,
           "slo_latency_ms": 8000.0,
           "slo_pct": 100.0,
-          "escalations": 1,
-          "failovers": 2,
+          "escalations": 6,
+          "failovers": 1,
           "refusals": 0,
-          "errors": 4,
-          "explorations": 2,
-          "unresolved": 1,
+          "errors": 2,
+          "explorations": 0,
+          "unresolved": 3,
           "tier_counts": {
-            "Haiku 4.5": 46,
-            "Sonnet 5": 20,
-            "Opus 5": 7,
-            "none": 1
+            "GPT-OSS 20B": 58,
+            "Qwen3.6 35B": 8,
+            "none": 3,
+            "DeepSeek V4-Pro": 5
           },
-          "projected_monthly_savings_usd": 362.15,
+          "projected_monthly_savings_usd": 102.24,
           "simulated": true
         }
       ],
@@ -342,19 +342,19 @@
           "bucket": 0,
           "bucket_label": "0.0-0.2",
           "start_tier": 0,
-          "start_model": "Haiku 4.5",
+          "start_model": "GPT-OSS 20B",
           "tiers": {
-            "Haiku 4.5": {
-              "attempts": 176,
-              "successes": 168,
-              "success_rate": 0.9545
+            "GPT-OSS 20B": {
+              "attempts": 180,
+              "successes": 172,
+              "success_rate": 0.9556
             },
-            "Sonnet 5": {
-              "attempts": 8,
-              "successes": 4,
-              "success_rate": 0.5
+            "Qwen3.6 35B": {
+              "attempts": 12,
+              "successes": 12,
+              "success_rate": 1.0
             },
-            "Opus 5": {
+            "DeepSeek V4-Pro": {
               "attempts": 0,
               "successes": 0,
               "success_rate": null
@@ -364,20 +364,20 @@
         {
           "bucket": 1,
           "bucket_label": "0.2-0.4",
-          "start_tier": 1,
-          "start_model": "Sonnet 5",
+          "start_tier": 0,
+          "start_model": "GPT-OSS 20B",
           "tiers": {
-            "Haiku 4.5": {
-              "attempts": 49,
-              "successes": 31,
-              "success_rate": 0.6327
+            "GPT-OSS 20B": {
+              "attempts": 64,
+              "successes": 44,
+              "success_rate": 0.6875
             },
-            "Sonnet 5": {
-              "attempts": 21,
-              "successes": 21,
+            "Qwen3.6 35B": {
+              "attempts": 4,
+              "successes": 4,
               "success_rate": 1.0
             },
-            "Opus 5": {
+            "DeepSeek V4-Pro": {
               "attempts": 0,
               "successes": 0,
               "success_rate": null
@@ -388,19 +388,19 @@
           "bucket": 2,
           "bucket_label": "0.4-0.6",
           "start_tier": 1,
-          "start_model": "Sonnet 5",
+          "start_model": "Qwen3.6 35B",
           "tiers": {
-            "Haiku 4.5": {
+            "GPT-OSS 20B": {
               "attempts": 2,
-              "successes": 2,
-              "success_rate": 1.0
+              "successes": 0,
+              "success_rate": 0.0
             },
-            "Sonnet 5": {
-              "attempts": 6,
-              "successes": 6,
-              "success_rate": 1.0
+            "Qwen3.6 35B": {
+              "attempts": 8,
+              "successes": 4,
+              "success_rate": 0.5
             },
-            "Opus 5": {
+            "DeepSeek V4-Pro": {
               "attempts": 0,
               "successes": 0,
               "success_rate": null
@@ -411,19 +411,19 @@
           "bucket": 3,
           "bucket_label": "0.6-0.8",
           "start_tier": 1,
-          "start_model": "Sonnet 5",
+          "start_model": "Qwen3.6 35B",
           "tiers": {
-            "Haiku 4.5": {
+            "GPT-OSS 20B": {
               "attempts": 1,
               "successes": 1,
               "success_rate": 1.0
             },
-            "Sonnet 5": {
+            "Qwen3.6 35B": {
               "attempts": 7,
               "successes": 3,
               "success_rate": 0.4286
             },
-            "Opus 5": {
+            "DeepSeek V4-Pro": {
               "attempts": 0,
               "successes": 0,
               "success_rate": null
@@ -434,92 +434,83 @@
           "bucket": 4,
           "bucket_label": "0.8-1.0",
           "start_tier": 2,
-          "start_model": "Opus 5",
+          "start_model": "DeepSeek V4-Pro",
           "tiers": {
-            "Haiku 4.5": {
+            "GPT-OSS 20B": {
               "attempts": 0,
               "successes": 0,
               "success_rate": null
             },
-            "Sonnet 5": {
+            "Qwen3.6 35B": {
               "attempts": 5,
-              "successes": 0,
-              "success_rate": 0.0
+              "successes": 2,
+              "success_rate": 0.4
             },
-            "Opus 5": {
+            "DeepSeek V4-Pro": {
               "attempts": 29,
-              "successes": 22,
-              "success_rate": 0.7586
+              "successes": 14,
+              "success_rate": 0.4828
             }
           }
         }
       ],
-      "adaptations": [
-        {
-          "bucket": 1,
-          "bucket_label": "0.2-0.4",
-          "from": 0,
-          "to": 1,
-          "direction": "up",
-          "why": "tier 1 holds 1.00 against best 1.00 in this bucket, within tolerance 0.05"
-        }
-      ]
+      "adaptations": []
     }
   },
   "comparison": {
-    "cost_saving_vs_flagship_pct": 63.7,
-    "quality_router": 0.9143,
-    "quality_flagship": 0.9143,
-    "quality_cheapest": 0.7286,
-    "quality_retained_pct": 100.0,
-    "cheapest_cost_saving_pct": 81.82,
-    "cheapest_quality_retained_pct": 79.69,
-    "latency_p50_change_pct": 80.49,
-    "projected_monthly_savings_usd": 362.15,
+    "cost_saving_vs_flagship_pct": 81.14,
+    "quality_router": 0.8571,
+    "quality_flagship": 0.9429,
+    "quality_cheapest": 0.7429,
+    "quality_retained_pct": 90.9,
+    "cheapest_cost_saving_pct": 97.69,
+    "cheapest_quality_retained_pct": 78.79,
+    "latency_p50_change_pct": 81.74,
+    "projected_monthly_savings_usd": 102.24,
     "router_epochs": 4,
     "learning_curve": [
       {
         "epoch": 1,
-        "savings_pct": 66.45,
+        "savings_pct": 80.77,
         "quality": 0.8571,
         "tier_counts": {
-          "Haiku 4.5": 59,
-          "Sonnet 5": 7,
-          "Opus 5": 7,
-          "none": 1
+          "GPT-OSS 20B": 58,
+          "Qwen3.6 35B": 8,
+          "none": 3,
+          "DeepSeek V4-Pro": 5
         }
       },
       {
         "epoch": 2,
-        "savings_pct": 70.1,
-        "quality": 0.8286,
+        "savings_pct": 85.48,
+        "quality": 0.8571,
         "tier_counts": {
-          "Haiku 4.5": 58,
-          "Sonnet 5": 11,
-          "Opus 5": 4,
-          "none": 1
+          "GPT-OSS 20B": 58,
+          "Qwen3.6 35B": 11,
+          "none": 3,
+          "DeepSeek V4-Pro": 2
         }
       },
       {
         "epoch": 3,
-        "savings_pct": 65.88,
+        "savings_pct": 81.11,
         "quality": 0.8571,
         "tier_counts": {
-          "Haiku 4.5": 59,
-          "Sonnet 5": 7,
-          "Opus 5": 7,
-          "none": 1
+          "GPT-OSS 20B": 59,
+          "Qwen3.6 35B": 7,
+          "none": 3,
+          "DeepSeek V4-Pro": 5
         }
       },
       {
         "epoch": 4,
-        "savings_pct": 63.7,
-        "quality": 0.9143,
+        "savings_pct": 81.14,
+        "quality": 0.8571,
         "tier_counts": {
-          "Haiku 4.5": 46,
-          "Sonnet 5": 20,
-          "Opus 5": 7,
-          "none": 1
+          "GPT-OSS 20B": 58,
+          "Qwen3.6 35B": 8,
+          "none": 3,
+          "DeepSeek V4-Pro": 5
         }
       }
     ]
