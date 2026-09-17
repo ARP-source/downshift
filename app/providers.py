@@ -361,6 +361,8 @@ def build_provider(settings: Settings) -> Provider:
         return MockProvider(settings)
     try:
         return AnthropicProvider(settings)
-    except ModuleNotFoundError:
-        print("[providers] anthropic SDK not installed -- using mock provider")
+    except Exception as exc:
+        # Missing package, missing credentials, bad client config -- none of
+        # these should take the dashboard down mid-demo. Fall back loudly.
+        print(f"[providers] live provider unavailable ({type(exc).__name__}: {exc}); using mock")
         return MockProvider(settings)
