@@ -143,7 +143,7 @@ def run_benchmark(limit: int | None = None, settings: Settings = SETTINGS, on_ev
 
     return {
         "items": len(items),
-        "provider": "mock" if settings.mock else "anthropic",
+        "provider": "mock" if settings.mock else pricing.LADDER_NAME,
         "simulated": router.get("simulated", False),
         "quality_floor": settings.quality_floor,
         "elapsed_s": round(time.time() - started, 2),

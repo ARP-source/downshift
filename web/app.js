@@ -250,14 +250,22 @@ function renderKPIs(s) {
   const c = r.comparison;
   host.innerHTML = `
     <div class="kpi"><div class="label">Cost vs all-flagship</div>
-      <div class="value" style="color:var(--router)">−${pct100(c.cost_saving_vs_flagship_pct)}</div>
+      <div class="value" style="color:var(--router)">${
+        c.cost_saving_vs_flagship_pct >= 0 ? "−" : "+"
+      }${pct100(Math.abs(c.cost_saving_vs_flagship_pct))}</div>
       <div class="foot">measured on ${r.items} items, both arms</div></div>
     <div class="kpi"><div class="label">Quality retained</div>
       <div class="value">${pct100(c.quality_retained_pct)}</div>
       <div class="foot">${pct(c.quality_router)} correct vs ${pct(c.quality_flagship)} flagship</div></div>
     <div class="kpi"><div class="label">p50 latency</div>
-      <div class="value">−${pct100(c.latency_p50_change_pct)}</div>
-      <div class="foot">cheaper tiers answer faster</div></div>
+      <div class="value">${c.latency_p50_change_pct >= 0 ? "−" : "+"}${pct100(
+        Math.abs(c.latency_p50_change_pct)
+      )}</div>
+      <div class="foot">${
+        c.latency_p50_change_pct >= 0
+          ? "cheaper tiers answer faster"
+          : "slower here — the cheap tier reasons before it answers"
+      }</div></div>
     <div class="kpi"><div class="label">At 1M requests/month</div>
       <div class="value">$${Number(c.projected_monthly_savings_usd).toLocaleString(undefined, {
         maximumFractionDigits: 0,
@@ -390,7 +398,7 @@ function renderCodeBench(s) {
         <td>${esc(r.title)}</td>
         <td>${esc(r.level)}</td>
         <td>${r.difficulty.toFixed(3)}</td>
-        <td>${esc(r.label || "�")}</td>
+        <td>${esc(r.label || "—")}</td>
         <td style="color:${r.solved ? "var(--good)" : "var(--bad)"}">${
           r.solved ? "yes" : `${r.passed}/${r.total}`
         }</td>
@@ -417,7 +425,7 @@ function renderBrownout(s) {
     return;
   }
   const rows = b.scenarios.map((x) => ({
-    name: `${SCENARIO_LABEL[x.mode] || x.mode} � ${x.arm === "router" ? "Router" : "All flagship"}`,
+    name: `${SCENARIO_LABEL[x.mode] || x.mode} · ${x.arm === "router" ? "Router" : "All flagship"}`,
     color: x.arm === "router" ? ARM_COLOR.router : ARM_COLOR.flagship,
     value: x.answered_pct,
   }));
@@ -600,7 +608,7 @@ $("compare-btn").addEventListener("click", async () => {
   if (!prompt) return;
   const btn = $("compare-btn");
   btn.disabled = true;
-  btn.textContent = "Asking every tier�";
+  btn.textContent = "Asking every tier…";
   try {
     const res = await fetch("/api/compare", {
       method: "POST",
@@ -617,7 +625,7 @@ $("compare-btn").addEventListener("click", async () => {
 $("run-code").addEventListener("click", async (e) => {
   const btn = e.currentTarget;
   btn.disabled = true;
-  btn.textContent = "Writing and running code�";
+  btn.textContent = "Writing and running code…";
   try {
     await fetch("/api/codebench", {
       method: "POST",
@@ -634,7 +642,7 @@ $("run-code").addEventListener("click", async (e) => {
 $("run-brownout").addEventListener("click", async (e) => {
   const btn = e.currentTarget;
   btn.disabled = true;
-  btn.textContent = "Breaking things�";
+  btn.textContent = "Breaking things…";
   try {
     await fetch("/api/brownout", {
       method: "POST",

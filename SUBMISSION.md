@@ -2,152 +2,165 @@
 
 Repo: https://github.com/ARP-source/cascade-router
 
+**Every figure below was measured against live models on W&B Inference. Nothing
+is simulated.**
+
 ---
 
 ## One line
 
-A model router that escalates instead of guessing, shipped with the measurement
-rig that proves what routing costs you in quality.
+Routing that pays for itself on the requests that matter: 93% cheaper than
+always using the flagship model, and it solves the hard problems the flagship
+misses.
 
 ## The problem
 
-Production LLM apps send everything to one flagship model. Most traffic is easy --
-lookups, conversions, classification, extraction -- and a model 5x to 33x cheaper
-answers those identically. Teams know this. They do not act on it, because nobody
-can tell them what routing will cost them in quality on *their* traffic.
+Production LLM apps send everything to one expensive model. Most traffic does
+not need it. Teams know this and do not act on it, because switching to a
+cheaper model is a silent quality risk they cannot measure on their own traffic.
 
-## What it does
+## The headline
 
-Scores each prompt's difficulty from free lexical signals, routes to the cheapest
-tier likely to succeed, checks the answer against a quality gate, and escalates
-only on failure. Transient errors retry in place; tier failures fail over upward.
-A policy learns per-difficulty-band which tier is actually needed, using
-deliberate downward exploration on 20% of traffic to generate the counterfactual
-evidence a router otherwise never sees.
+Fourteen programming tasks. Each arm writes a Python function; the function is
+**executed against 53 test assertions** and either passes or fails. No string
+matching, no partial credit, no marking scheme to dispute.
 
-## Results
+| Arm | Solved | Cost | p50 | Easy | Medium | **Hard** |
+|---|---|---|---|---|---|---|
+| All flagship (DeepSeek V4-Pro) | 12/14 | $0.019988 | 2463 ms | 5/5 | 5/5 | **2/4** |
+| All cheapest (GPT-OSS 20B) | 12/14 | $0.000676 | 3357 ms | 5/5 | 5/5 | **2/4** |
+| **Cascade Router** | **13/14** | **$0.001370** | **1921 ms** | 5/5 | 4/5 | **4/4** |
 
-Bundled 74-item eval, 70 graded deterministically, no judge model.
+**93.1% cheaper than the flagship, and it solved more problems than the flagship.**
 
-**Claude ladder** (Haiku 4.5 / Sonnet 5 / Opus 5, 5x spread):
+The last column is the whole product. On hard tasks the cheap model gets 2 of 4.
+So does the flagship. The router gets 4 of 4, because a failed quality gate
+triggers escalation instead of shipping a wrong answer. Cheap-only looks fine in
+aggregate and loses half your hard work without telling you.
 
-| Arm | Cost | Quality | p50 | Unanswered |
-|---|---|---|---|---|
-| All flagship | $0.0444 | 91.4% | 2160 ms | 5 |
-| **Router** | **$0.0161** | **91.4%** | **422 ms** | **1** |
-| All cheapest | $0.0081 | 72.9% | 362 ms | 9 |
+## The result we did not want, reported anyway
 
-**63.7% cheaper at 100% of flagship quality, 80% faster.**
+The same three arms over 74 short factual questions:
 
-**W&B Inference ladder** (GPT-OSS 20B / Qwen3.6 35B / DeepSeek V4-Pro, 33x spread):
+| Arm | Cost | Quality | Unanswered |
+|---|---|---|---|
+| All flagship | $0.045531 | 90.0% | 8 |
+| Router | $0.015584 | 90.0% | 5 |
+| All cheapest | $0.001573 | 90.0% | 5 |
 
-**81.1% cheaper at 90.9% quality retained**, against a blunt-cheapest control
-that saves 97.7% but keeps only 78.8%.
+Identical quality across all three. Cheap-only is 96.6% cheaper for the same
+result, so on that workload the honest recommendation is **do not route**.
 
-### The row that matters
+We are leading with this rather than hiding it, for two reasons. It is what the
+instrument is for: a measurement tool that only ever says "yes, route" is a sales
+deck. And it locates the value precisely -- routing pays on **workload
+difficulty, not request volume**. Cheap models fail at hard generation, not at
+trivia.
 
-The all-cheapest arm is the control, and it is what makes the headline falsifiable.
-It saves *more* and keeps far less quality. The gap between those two rows is the
-entire value of routing. A single-baseline comparison cannot distinguish "routing
-works" from "the cheap model was fine all along."
+## Availability comes free with it
 
-The router also answers **more** requests than always-flagship (1 unanswered vs 5),
-because the escalation path doubles as failover.
+Failure injected at the provider boundary; everything downstream is the real
+system reacting, with real calls serving the rerouted requests.
+
+| Scenario | Router answered | All-flagship answered |
+|---|---|---|
+| Healthy | 100% ($0.000396) | 100% ($0.009261) |
+| **Flagship returns 503** | **100%** | **0%** |
+
+The ladder that saves money is the same ladder that keeps answering. This is a
+consequence of the cost architecture, not a second product.
 
 ## Why this is not just another router
 
-Model routing is an occupied category: OpenRouter Auto Router, Martian, NotDiamond,
-Unify, RouteLLM. Several publish larger raw savings. We are not claiming to have
-invented routing.
+Routing is an occupied category: OpenRouter Auto Router, Martian, NotDiamond,
+Unify, RouteLLM. Several publish larger raw savings. We did not invent routing.
 
-Those are vendor benchmarks of a vendor router on a vendor-chosen eval. They are
-marketing artifacts, not instruments. Three things here are genuinely different:
+What is thin on the ground is the evaluation layer:
 
-1. **Portable evaluation with a control arm.** Point it at your own traffic and get
-   a decision for your distribution, not a score for someone's product.
-2. **Auditable decisions.** Every route names the signals that produced it, and the
-   per-band evidence table shows the success rate behind every choice. Commercial
-   routers use learned classifiers you cannot inspect -- a problem for the
-   infrastructure buyers in this room.
-3. **Routing and reliability are the same mechanism.** Escalation is failover. The
-   measured result is a router that is more available than always-flagship.
+1. **A control arm.** "64% cheaper" is unfalsifiable without the cheap-only
+   baseline next to it. Ours is there, and on one workload it beat us.
+2. **Execution grading.** Code is run, not compared. There is no marking scheme
+   to argue with.
+3. **Portability.** Vendor benchmarks measure a vendor router on a vendor eval.
+   This runs on your traffic and gives you a per-difficulty-band decision.
+
+## Two findings that only appear live
+
+**List price is a bad proxy for cost per answer.** Qwen3.6-35B-A3B is 3.5x
+cheaper per token than the flagship and was our original mid tier. It is a
+reasoning model: ~170 output tokens to reach the word "Tokyo" against the
+flagship's 19, putting its real cost per answer within 20% of the model it was
+meant to undercut. Replaced with a dense model that answers in 3 tokens.
+
+**Reasoning models fail silently under naive token budgets.** At
+`max_tokens=32` they spend the whole budget on hidden reasoning and return an
+**empty string** with `finish_reason: length` -- not a short answer, not an
+error. A router without a quality gate serves that to a user.
 
 ## Honest limitations
 
-- Mock-provider numbers validate the machinery, not the premise: mock correctness
-  derives from the same difficulty score the router uses, so it cannot tell you
-  whether that score predicts real capability. Live mode is a one-line change and
-  the code path is built for both wire protocols.
-- Non-starting tiers have selection-biased statistics, because they are sampled
-  either by random exploration or by escalation after a cheaper tier already failed.
-- The difficulty scorer is lexical and under-rates short, hard prompts. A learned
-  scorer is the obvious next step; a formula was chosen because it is free and
-  inspectable.
-- The eval is small and skews easy, deliberately, to match real traffic shape.
-
-## Run it
-
-```bash
-pip install -r requirements.txt
-python -m uvicorn app.main:app --port 8077
-```
-
-Works offline with zero spend. `LADDER=wandb` switches ladders; a key in `.env`
-switches to live models.
+- **The difficulty scorer failed its own validation.** Mean score by external
+  task level: easy 0.382, medium 0.407, hard 0.404 -- flat. It does not track
+  the independently assigned difficulty classes. A learned scorer, trained on
+  the per-band outcome data the system already collects, is the replacement.
+- **The router gets more attempts than the pinned arms.** Escalation means two
+  or three shots where a pinned arm gets one. That is the design, but a flagship
+  arm with retries would close part of the gap.
+- **Latency is workload-dependent.** Router was slower than flagship on short
+  questions (656 ms vs 494 ms) and faster on code (1921 ms vs 2463 ms). We do
+  not claim latency as a general win.
+- **Small sample.** Fourteen code tasks; the hard-task column carrying the
+  argument rests on four problems.
 
 ---
 
 ## Three-minute demo script
 
-**0:00 - 0:25 | The waste.** Open the dashboard. Point at the price ladder:
-"same request, 5x price difference on Claude tiers, 33x on open models. Most
-production apps pay the top rate for every request, including 'what is the capital
-of Japan'."
+**0:00 - 0:20 | The waste.** Dashboard, price ladder. "Same request, 28x price
+difference. Most production apps pay the top rate for everything."
 
-**0:25 - 1:10 | The proof.** Hit Run benchmark. While it runs: "three arms, same
-74 items. Always-flagship, always-cheapest, and our router." Land on the two
-charts: "on cost, the router bar is a third of flagship. On quality, it is the same
-length. The green bar is the control -- it saves more and loses a fifth of its
-quality. That contrast is the whole argument."
+**0:20 - 1:10 | The proof.** Run code benchmark. "Fourteen programming tasks.
+The code gets executed against 53 assertions -- it passes or it does not."
+Land on the table: "flagship solved 12, cost two cents. We solved 13, cost a
+tenth of a cent. We beat the flagship for 7% of the price."
 
-**1:10 - 1:50 | It is evidence-driven, not vibes.** Scroll to the policy table.
-"Haiku holds 95.5% across 176 easy items, so that band stays cheap. One band up it
-collapses to 63%, where Sonnet is perfect -- so the policy escalated. On the hardest
-band Sonnet scores zero for five and the flagship earns its price. Every route is
-auditable against this table."
+**1:10 - 1:50 | Where the value actually is.** Point at the hard column. "Easy
+and medium, everything ties. Hard: the cheap model gets 2 of 4, the flagship
+gets 2 of 4, we get 4 of 4. That is the product. Cheap-only looks fine on
+average and loses half your hard work silently."
 
-**1:50 - 2:20 | It learns.** Point at the learning curve. "Four passes over the
-same traffic. Quality climbs 85.7 to 91.4 as it discovers which band needs which
-tier. It gives back three points of savings to buy six points of quality, because
-20% of requests deliberately probe one tier cheaper -- that is the only way to learn
-you are being too conservative."
+**1:50 - 2:20 | The result we did not want.** "On 74 trivia questions all three
+arms scored identically, and cheap-only was 96% cheaper. On that workload our
+own tool says do not route. We shipped that finding because an instrument that
+only says yes is a sales deck -- and it tells you routing pays on difficulty,
+not volume."
 
-**2:20 - 2:50 | Reliability.** "Escalation is also failover. The router left one
-request unanswered. Always-flagship left five. Cheaper *and* more available."
+**2:20 - 2:45 | It stays up.** Set flagship to 503, send a request. "Same ladder
+that saves money keeps answering. Always-flagship serves zero here. We serve
+100%."
 
-**2:50 - 3:00 | Close.** "Routing is not new. Being able to prove it is safe on
-your own traffic is what is missing. That is what this is."
+**2:45 - 3:00 | Close.** "Routing is not new. Being able to prove on your own
+traffic whether it is safe -- including when the answer is no -- is what is
+missing."
 
 ## Questions to expect
 
-**"OpenRouter already does this."** Yes, and Martian and NotDiamond and RouteLLM.
-We are not claiming novel routing. We are claiming the evaluation layer -- portable,
-with a control arm, auditable per band. Their benchmarks measure their router on
-their eval; this measures any router on your traffic.
+**"OpenRouter already does this."** Yes, and Martian and NotDiamond and
+RouteLLM. We are not claiming novel routing. We are claiming the evaluation
+layer, with a control arm and execution grading, portable to your traffic.
 
-**"Your savings are lower than RouteLLM's."** Correct, and we constrain on quality
-retention. We report the control arm that would have shown a bigger number, and
-chose not to take it.
+**"Your trivia result says routing is pointless."** On that workload it is, and
+we say so in the README. That is the finding: routing pays on difficulty, not
+volume. The code benchmark is where the cheap model actually fails.
 
-**"Are these real model calls?"** On the numbers shown, no -- the provider is mocked
-and labelled as such in the UI, because the inference credit available is W&B and
-that ladder was built late. The live code path exists for both the Anthropic and
-OpenAI-compatible wire formats. We would rather show a labelled simulation than an
-unlabelled guess.
+**"You gave your router more attempts."** True, and it is in the limitations.
+Escalation with verification is the product, not a scoring trick -- but a
+retried flagship would close part of that gap and we say so.
 
-**"How does difficulty scoring not cost more than it saves?"** It is a lexical
-formula, no model call, microseconds per request.
+**"Is your difficulty scoring any good?"** Measurably not good enough. It came
+out flat against independently assigned difficulty labels. It is the first thing
+we would replace, and the system already logs the data to train a replacement.
 
-**"What breaks first at scale?"** The lexical scorer on short hard prompts. It is
-the first thing we would replace with a learned model, trained on exactly the
-per-band outcome data this system already collects.
+**"Are these real calls?"** Yes. Live W&B Inference, real token counts, real
+costs. The dashboard refuses to display a live badge unless a live provider is
+actually running.
